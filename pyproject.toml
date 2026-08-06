@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mini-transformer"
+version = "0.1.0"
+description = "Transformer inference lab: build from tokenizer to GPT-2"
+requires-python = ">=3.10"
+dependencies = [
+    "torch",
+    "transformers",
+    "tokenizers",
+    "pytest",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

@@ -1,0 +1,156 @@
+# Day 01：Tokenizer → Embedding
+
+今天的主线只有一条：
+
+```text
+文本 → input_ids → Embedding 查表 → hidden_states
+```
+
+## 进度与落点
+
+
+| 进度  | 任务                       | 落点                                                                                       |
+| --- | ------------------------ | ---------------------------------------------------------------------------------------- |
+| ✅   | 任务 0：准备项目                | 目录结构 + `.venv`                                                                           |
+| ✅   | 任务 1：学习 Tokenizer        | `[concepts/00-tokenizer.md](./concepts/00-tokenizer.md)`                                 |
+| ✅   | 任务 2：Tokenizer 实验        | `[../experiments/tokenizer_playground.ipynb](../experiments/tokenizer_playground.ipynb)` |
+| ✅   | 任务 3：学习 Embedding        | `[concepts/01-embedding.md](./concepts/01-embedding.md)`                                 |
+| ✅   | 任务 4：实现 `TokenEmbedding` | `[../src/mini_transformer/embedding.py](../src/mini_transformer/embedding.py)`           |
+| ✅   | 任务 5：单元测试                | `[../tests/test_embedding.py](../tests/test_embedding.py)`                               |
+| ✅   | 任务 6：张量约定文档              | `[concepts/00-tensor-conventions.md](./concepts/00-tensor-conventions.md)`               |
+
+
+验收：`pytest -q` 全部通过，并能口述上面那条数据流。
+
+---
+
+
+
+## 任务 1：学习 Tokenizer（30 分钟）
+
+必读：Hugging Face Tokenizer API
+
+只需要搞明白：
+
+1. `encode`：文本怎样变成 token ID
+2. `decode`：token ID 怎样还原为文本
+3. BOS、EOS、PAD、UNK 分别有什么作用
+4. `input_ids` 与 `attention_mask` 的区别
+5. left padding 与 right padding 的区别
+6. Token 数量为什么不等于字符数
+7. BPE、WordPiece、SentencePiece 的共同目标是什么
+
+**不要深入 tokenizer 训练算法。**
+
+笔记见：`[concepts/00-tokenizer.md](./concepts/00-tokenizer.md)`
+
+---
+
+
+
+## 任务 2：Tokenizer 实验（45 分钟）
+
+在 `experiments/tokenizer_playground.ipynb` 中加载两个 tokenizer：
+
+```python
+from transformers import AutoTokenizer
+
+tokenizer_a = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-0.5B-Instruct")
+tokenizer_b = AutoTokenizer.from_pretrained("bert-base-multilingual-cased")
+```
+
+测试 10 条文本，每条打印：原始文本 / tokens / input_ids / token 数量 / decode 结果。
+
+再完成两个实验：
+
+1. 比较两个 tokenizer 对同一句话产生的 token 数
+2. 分别设置 `padding_side="left"` 和 `"right"`，打印 `input_ids`、`attention_mask`
+
+**关键结论：**
+Padding 改变批处理中的 token 位置和 attention mask，但不应改变原始文本的有效 token。
+
+---
+
+
+
+## 任务 3：学习 Embedding（20 分钟）
+
+必读：PyTorch `nn.Embedding`
+
+手写到 `[concepts/01-embedding.md](./concepts/01-embedding.md)`：
+
+- Embedding 权重：`[V, D]`
+- 输入 `token_ids`：`[B, S]`
+- 输出 `hidden_states`：`[B, S, D]`
+
+其中：
+
+- `V`：词表大小
+- `D`：隐藏维度
+- token ID 是整数索引，不代表 token 之间的数值大小关系
+- Embedding 本质上是根据 token ID 从 `[V, D]` 中取出对应行
+- 相同 token ID 一定取得相同的 embedding 向量
+- Token Embedding 本身不能区分同一个 token 出现在什么位置
+
+---
+
+
+
+## 任务 4：实现 TokenEmbedding（50 分钟）
+
+在 `src/mini_transformer/embedding.py` 中实现 `TokenEmbedding`。
+
+理解每一行，不要直接把它当最终答案复制过去。
+
+---
+
+
+
+## 任务 5：完成单元测试（30 分钟）
+
+`tests/test_embedding.py` 至少包含：
+
+1. 输入 `[B,S]`，输出是 `[B,S,D]`
+2. 相同 token ID 得到完全相同的向量
+3. `torch.inference_mode()` 下可以正常运行
+4. 输入不是二维时报错
+5. 输入不是 `torch.long` 时报错
+6. token ID 超出词表范围时报错
+
+验收：
+
+```bash
+pytest -q
+```
+
+---
+
+
+
+## 任务 6：完成当天文档（25 分钟）
+
+在 `[concepts/00-tensor-conventions.md](./concepts/00-tensor-conventions.md)` 写下张量约定，并记录今天实验的三条结论。
+
+---
+
+
+
+## 今日过关标准
+
+- [x] 运行了 10 条中英文 Tokenizer 实验
+- [x] 对比了两个不同 tokenizer
+- [x] 对比了 left/right padding
+- [x] 完成 `TokenEmbedding`
+- [x] `pytest -q` 全部通过
+- [x] 完成张量约定文档
+- [ ] 能口述 文本 → `input_ids` → `hidden_states`（自己过一遍）
+
+---
+
+
+
+## 今日最重要的面试式问题
+
+**如果 token ID 100 比 token ID 10 大十倍，是否代表它对应的词语语义更强？**
+
+答案必须是：**不代表**。Token ID 只是查找 Embedding 行的离散索引。
