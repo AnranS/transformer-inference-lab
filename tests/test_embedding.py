@@ -4,6 +4,22 @@ import pytest
 from mini_transformer.embedding import TokenEmbedding
 
 
+def test_weight_shape_is_vocab_by_hidden():
+    model = TokenEmbedding(vocab_size=128, hidden_size=16)
+
+    assert model.embedding.weight.shape == (128, 16)
+
+
+def test_rejects_non_positive_vocab_size():
+    with pytest.raises(ValueError, match="vocab_size"):
+        TokenEmbedding(vocab_size=0, hidden_size=16)
+
+
+def test_rejects_non_positive_hidden_size():
+    with pytest.raises(ValueError, match="hidden_size"):
+        TokenEmbedding(vocab_size=128, hidden_size=0)
+
+
 def test_embedding_shape():
     model = TokenEmbedding(vocab_size=128, hidden_size=16)
     token_ids = torch.tensor(
@@ -65,3 +81,29 @@ def test_rejects_out_of_vocab_token_id():
 
     with pytest.raises(IndexError):
         model(token_ids)
+
+
+def test_rejects_negative_token_id():
+    model = TokenEmbedding(vocab_size=128, hidden_size=16)
+    token_ids = torch.tensor([[0, -1]])
+
+    with pytest.raises(IndexError):
+        model(token_ids)
+
+
+def test_accepts_empty_batch():
+    model = TokenEmbedding(vocab_size=128, hidden_size=16)
+    token_ids = torch.empty((0, 4), dtype=torch.long)
+
+    output = model(token_ids)
+
+    assert output.shape == (0, 4, 16)
+
+
+def test_range_check_can_be_disabled():
+    model = TokenEmbedding(vocab_size=128, hidden_size=16, check_token_range=False)
+    token_ids = torch.tensor([[1, 2, 3]])
+
+    output = model(token_ids)
+
+    assert output.shape == (1, 3, 16)

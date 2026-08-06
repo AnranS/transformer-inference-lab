@@ -37,7 +37,28 @@ tests/
 ## 环境
 
 ```bash
+python3 -m venv .venv          # 也可以用 uv venv
 source .venv/bin/activate
-pip install -e .
+pip install -e ".[dev]"        # dev 额外装 pytest
 pytest -q
 ```
+
+已验证组合：Python 3.12 + torch 2.13 + transformers 5.14。
+
+## 跑 notebook 前先缓存模型
+
+`experiments/tokenizer_playground.ipynb` 里设了 `HF_HUB_OFFLINE=1` 和
+`local_files_only=True`（避免 kernel 被代理卡死），所以**模型必须先下载到本地缓存**，
+否则会直接报错。第一次跑之前，在联网环境下执行：
+
+```bash
+python -c "
+from transformers import AutoTokenizer
+for name in ['bert-base-uncased', 'bert-base-multilingual-cased', 'Qwen/Qwen2.5-0.5B-Instruct']:
+    AutoTokenizer.from_pretrained(name)
+"
+```
+
+只会拉 tokenizer 文件，不下载模型权重。
+
+notebook 的输出不进版本库，提交前请先清空（Kernel → Restart & Clear Output）。
