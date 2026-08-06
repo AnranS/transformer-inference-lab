@@ -37,10 +37,17 @@ tests/
 ## 环境
 
 ```bash
-python3 -m venv .venv          # 也可以用 uv venv
+uv sync                # 创建 .venv 并装好全部依赖（dev 组的 pytest 默认包含）
 source .venv/bin/activate
-pip install -e ".[dev]"        # dev 额外装 pytest
 pytest -q
+```
+
+`pytest` 放在 `[dependency-groups]` 的 `dev` 组里，`uv sync` 默认会装，不需要额外加参数。
+不用 uv 的话：
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -e . && pip install pytest
 ```
 
 已验证组合：Python 3.12 + torch 2.13 + transformers 5.14。

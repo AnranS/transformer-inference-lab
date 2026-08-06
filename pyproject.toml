@@ -13,9 +13,12 @@ dependencies = [
     "tokenizers>=0.19",
 ]
 
-[project.optional-dependencies]
+# uv sync 默认安装 dev 组，不用额外加参数。
+# 注意：uv sync 会卸载所有未在此声明的包，手动装的工具要写进来才不会被清掉。
+[dependency-groups]
 dev = [
     "pytest>=8",
+    "ipykernel>=6",  # experiments/ 下的 notebook 需要
 ]
 
 [tool.setuptools.packages.find]

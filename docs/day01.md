@@ -14,7 +14,7 @@
 | ✅   | 任务 0：准备项目                | 目录结构 + `.venv`                                                                           |
 | ✅   | 任务 1：学习 Tokenizer        | `[concepts/00-tokenizer.md](./concepts/00-tokenizer.md)`                                 |
 | ✅   | 任务 2：Tokenizer 实验        | `[../experiments/tokenizer_playground.ipynb](../experiments/tokenizer_playground.ipynb)` |
-| ✅   | 任务 3：学习 Embedding        | `[concepts/01-embedding.md](./concepts/01-embedding.md)`                                 |
+| ✅   | 任务 3：学习 Embedding        | `[concepts/01-embedding.md](./concepts/01-embedding.md)` + notebook「3. Embedding 查表实验」  |
 | ✅   | 任务 4：实现 `TokenEmbedding` | `[../src/mini_transformer/embedding.py](../src/mini_transformer/embedding.py)`           |
 | ✅   | 任务 5：单元测试                | `[../tests/test_embedding.py](../tests/test_embedding.py)`                               |
 | ✅   | 任务 6：张量约定文档              | `[concepts/00-tensor-conventions.md](./concepts/00-tensor-conventions.md)`               |

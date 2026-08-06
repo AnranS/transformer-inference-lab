@@ -79,7 +79,8 @@ def test_rejects_out_of_vocab_token_id():
     model = TokenEmbedding(vocab_size=128, hidden_size=16)
     token_ids = torch.tensor([[1, 127, 128]])
 
-    with pytest.raises(IndexError):
+    # 报错信息要带上越界的实际值，否则和 nn.Embedding 的兜底没区别
+    with pytest.raises(IndexError, match="but got min="):
         model(token_ids)
 
 
@@ -107,3 +108,14 @@ def test_range_check_can_be_disabled():
     output = model(token_ids)
 
     assert output.shape == (1, 3, 16)
+
+
+def test_disabled_range_check_is_actually_skipped():
+    model = TokenEmbedding(vocab_size=128, hidden_size=16, check_token_range=False)
+    token_ids = torch.tensor([[1, 128]])
+
+    # 越界仍由 nn.Embedding 兜底报错，但不该再出现我们自己那条带实际值的信息
+    with pytest.raises(IndexError) as excinfo:
+        model(token_ids)
+
+    assert "but got min=" not in str(excinfo.value)
