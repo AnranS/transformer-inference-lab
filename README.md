@@ -5,7 +5,8 @@
 ## 主线
 
 ```text
-文本 → input_ids → Embedding 查表 → hidden_states
+文本 → input_ids → Embedding 查表 → hidden_states → LM Head → logits → next token
+                   └─ Day 01 ─────────────────┘   └─ Day 02 ──────────────────┘
 ```
 
 ## 文档怎么分
@@ -15,23 +16,28 @@
 | **每日任务** | `docs/dayXX.md` | 当天要做什么、过关标准、进度 |
 | **概念笔记** | `docs/concepts/` | 可复用的知识点，不和某一天任务绑死 |
 
-当前任务：[docs/day01.md](docs/day01.md)
+当前任务：[docs/day02.md](docs/day02.md)（Day 01 已完成）
 
 ## 目录
 
 ```text
 docs/
-  day01.md                       # Day01 任务记录
+  day01.md                       # Day01 任务记录（已完成）
+  day02.md                       # Day02 任务记录（进行中）
   concepts/
     00-tokenizer.md              # Tokenizer 概念
     00-tensor-conventions.md     # 张量约定
     01-embedding.md              # Embedding 概念
+    02-lm-head.md                # LM Head 与 logits（Day02 产出）
 experiments/
   tokenizer_playground.ipynb
 src/mini_transformer/
   embedding.py
+  lm_head.py                     # Day02 产出
+  tiny_lm.py                     # Day02 产出
 tests/
   test_embedding.py
+  test_lm_head.py                # Day02 产出
 ```
 
 ## 环境
