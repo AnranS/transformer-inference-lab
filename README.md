@@ -61,15 +61,24 @@ docs/
     03-*.md … 23-*.md            # 随学习进度补
 notebooks/
   day01_tokenizer_playground.ipynb  # 已写，Day 1 的动手实验
-  day03_*.ipynb … day26_*.ipynb     # 随学习进度补，按学习单元命名
+  day03_logits_and_softmax.ipynb    # 已写，含只算最后一位的耗时对比
+  day04_*.ipynb … day26_*.ipynb     # 随学习进度补，按学习单元命名
 src/mini_transformer/
-  embedding.py                   # Day 2
+  embedding.py                   # Day 2，TokenEmbedding
+  lm_head.py                     # Day 3，LMHead
+  tiny_lm.py                     # Day 3，骨架待实现
+  generate.py                    # Day 4，骨架待实现
 tests/
-  test_embedding.py              # Day 2
+  test_embedding.py              # Day 2，13 例
+  test_lm_head.py                # Day 3，20 例
 ```
 
 后续会出现的 `attention.py`、`rope.py`、`cache.py`、`benchmarks/` 等文件，
 以及它们各自属于哪个学习单元，见 [roadmap 的目录结构一节](docs/roadmap.md#四目录结构)。
+
+Notebook 一律**清空输出后再提交**（输出里有绝对路径，而且 diff 噪声大），
+并按 nbformat 自己的写法存盘（`indent=1` + 键名排序）。
+不按这个格式存，编辑器下次保存时会重排整个文件，几百行的假 diff 会盖掉真改动。
 
 ## 环境
 
