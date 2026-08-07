@@ -28,7 +28,7 @@
 | 类型 | 位置 | 作用 |
 |------|------|------|
 | **总纲** | [`docs/roadmap.md`](docs/roadmap.md) | 40 单元的计划、必读资料、进度总览。**迷路了回这里** |
-| **每日任务** | `docs/dayXX-YY.md` | 当天做什么、预算、过关标准。**每天从这里开始** |
+| **每日任务** | `docs/dayXX-YY.md` | 当天做什么、落点、过关标准。**每天从这里开始** |
 | **细粒度笔记** | `docs/concepts/` | 边学边记，一个知识点一篇 |
 | **专题交付物** | `docs/NN-*.md` | 每周门禁产出，综合当周笔记 |
 
@@ -86,7 +86,7 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install -e . && pip install pytest
 ```
 
-已验证组合：Python 3.12 + torch 2.13 + transformers 5.14。前 4 周 CPU 即可。
+已验证组合：Python 3.13 + torch 2.13 + transformers 5.14 + pytest 9.1。前 4 周 CPU 即可。
 
 ## 跑 notebook 前先缓存模型
 

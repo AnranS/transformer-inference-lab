@@ -1,6 +1,6 @@
 # 学习单元 Day 10：HF 源码、数值对齐与第 1 周门禁
 
-> [`roadmap.md`](./roadmap.md)：**学习单元 Day 10**｜学习日 7｜预算 5 小时
+> [`roadmap.md`](./roadmap.md)：**学习单元 Day 10**｜学习日 7
 
 第 1 周最后一天。今天做三件事：读一遍工业级实现、补齐测试和文档、**过门禁**。
 
@@ -76,7 +76,7 @@ HF 版本迭代较快，函数名可能和上面略有差异。**以你本地装
 **「差异与原因」这一列是重点。** 它是你后面几周的待办清单——
 每补上一项就划掉一行，到 Day 19 做 HF parity 时这张表就是你的对照清单。
 
-Notion 对这个单元的要求是「能从 HF `LlamaDecoderLayer` 反向定位到自己的实现」。
+这个单元的要求是「能从 HF `LlamaDecoderLayer` 反向定位到自己的实现」。
 这张表就是实现那个能力的载体。
 
 ## 任务 3：补齐测试（75 分钟）
@@ -92,7 +92,7 @@ Notion 对这个单元的要求是「能从 HF `LlamaDecoderLayer` 反向定位�
 2. **参数化**。用 `@pytest.mark.parametrize` 覆盖多组 `(B, Hq, S, Dh)`，
    尤其要包含 `B=1`、`S=1`、`Hq=1` 这些边界。
 3. **补上 `Sq != Skv` 的用例**。这是今天必须新增的：
-   `Sq=1, Skv=8` 的解码形态，现在就要测，不能等到第 6 周。
+   `Sq=1, Skv=8` 的解码形态，现在就要测，不能等到 Day 26～30。
 
 再加一条**门禁级测试**，用显眼的名字标出来：
 
@@ -105,7 +105,7 @@ def test_week1_gate_naive_attention_matches_sdpa():
 
 ## 任务 4：Attention shape notebook（45 分钟）
 
-新建 `notebooks/01_attention_shapes.ipynb`。这是 Notion 规范里的第一个专用 notebook，
+新建 `notebooks/01_attention_shapes.ipynb`。这是目录规范里的第一个专用 notebook，
 目的是**把形状变换可视化**，以后忘了随时回来看。
 
 四节：
@@ -147,7 +147,7 @@ def test_week1_gate_naive_attention_matches_sdpa():
 - [ ] 因果 attention 第 0 行概率为 `[1, 0, 0, ...]`
 - [ ] `pytest -q` 全部通过
 
-### 第 1 周段落验收（Notion 原文）
+### 第 1 周段落验收
 
 - [ ] 不看资料写出 Attention 公式
 - [ ] 从 `[B,S,D]` 推导到 `[B,Hq,S,Dh]` 再还原

@@ -1,11 +1,11 @@
 # 学习单元 Day 23：Batch、Padding、Mask 与 Position
 
-> [`roadmap.md`](./roadmap.md)：**学习单元 Day 23**｜学习日 16｜预算 3 小时
+> [`roadmap.md`](./roadmap.md)：**学习单元 Day 23**｜学习日 16
 
 昨天的 `generate` 假设 batch 里所有序列**一样长**。真实场景不是这样。
 今天处理长度不齐——这是**推理服务里最容易出错、也最少被讲清**的一块。
 
-Notion 用加粗标出了核心难点：
+核心难点：
 
 > **最后有效 token 位置不一定等于数组最后一列。**
 
@@ -141,7 +141,7 @@ Prefill 之后，新 token 的位置是 `真实长度`，而不是 `input_ids.sh
 所以每条序列的 position 递增起点不同。维护一个 `[B]` 的
 `current_position` 张量，每轮 `+1`。
 
-**这一点会直接延续到第 6 周的 `cache_position`。** 今天想清楚，Day 27 会轻松很多。
+**这一点会直接延续到 Day 27～28 的 `cache_position`。** 今天想清楚，Day 27 会轻松很多。
 
 ## 任务 3：改造 `generate` 支持不齐长度（60 分钟）
 

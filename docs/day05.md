@@ -1,6 +1,6 @@
 # 学习单元 Day 05：广播、数值测试与第一篇专题文档
 
-> [`roadmap.md`](./roadmap.md)：**学习单元 Day 5**｜学习日 3｜预算 2.5 小时
+> [`roadmap.md`](./roadmap.md)：**学习单元 Day 5**｜学习日 3
 
 今天不加新算子，只做两件事：把前四个单元的 shape 知识**固化成规则**，
 并学会**怎么判断两个张量算得一样**——后者是接下来所有 HF 对齐工作的地基。
@@ -109,7 +109,7 @@ PyTorch 按 dtype 给的默认容差（这几个数记住，第 4 周对齐 HF �
 
 ## 任务 4：写第一篇专题文档（55 分钟）
 
-这是 Notion 路线要求的第一个正式交付物：**`docs/01-autoregressive-language-model.md`**。
+这是路线里第一个正式交付物：**`docs/01-autoregressive-language-model.md`**。
 
 和 `concepts/` 下的笔记不同——那些是边学边记的碎片，这篇要**综合成一条完整叙事**，
 写给「一个月后忘光了的自己」看。四个必需部分：
@@ -134,7 +134,7 @@ PyTorch 按 dtype 给的默认容差（这几个数记住，第 4 周对齐 HF �
 hidden state 和 embedding 的关系也要说清：embedding 是**第 0 层**的 hidden state，
 后面每个 Decoder Block 都会产出新的 hidden state，形状始终 `[B,S,D]`。
 
-**3. 自回归生成伪代码**（写你自己 Day 4 实现的那版，不是抄 Notion 的）
+**3. 自回归生成伪代码**（写你自己 Day 4 实现的那版，不要抄现成的）
 
 **4. 为什么第 t 个 token 依赖之前所有 token**
 
@@ -148,7 +148,7 @@ hidden state 和 embedding 的关系也要说清：embedding 是**第 0 层**的
 
 ## 任务 5：第一段验收自查（15 分钟）
 
-Notion 给这一段（学习单元 Day 1～5）的验收标准，逐条自问，不看资料：
+这一段（学习单元 Day 1～5）的验收标准，逐条自问，不看资料：
 
 - [ ] 能从文本一路讲到 next token
 - [ ] 能写出 embedding 和 LM Head 的 shape

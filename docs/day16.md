@@ -1,6 +1,6 @@
 # 学习单元 Day 16：ModelConfig
 
-> [`roadmap.md`](./roadmap.md)：**学习单元 Day 16**｜学习日 11｜预算 3 小时
+> [`roadmap.md`](./roadmap.md)：**学习单元 Day 16**｜学习日 11
 
 零件都齐了，但尺寸参数还散落在各个模块的构造函数里。今天把它们集中到一处，
 并建立**尺寸约束的自动校验**。
@@ -32,7 +32,7 @@
 
 ## 任务 1：学习 HF `LlamaConfig` 字段（30 分钟）
 
-Notion 要求 `config.py` 至少包含这 11 个字段。逐个确认自己知道它控制什么：
+`config.py` 至少包含这 11 个字段。逐个确认自己知道它控制什么：
 
 | 字段 | 控制什么 | 用在哪 |
 |---|---|---|
@@ -72,7 +72,7 @@ class ModelConfig:
     tie_word_embeddings: bool = True
 ```
 
-默认值就是 Notion 给的**小配置**（`V=256, D=128, I=384, L=2, Hq=Hkv=4, max_S=128`），
+默认值就是 roadmap 给的**小配置**（`V=256, D=128, I=384, L=2, Hq=Hkv=4, max_S=128`），
 这样 `ModelConfig()` 直接就是测试用的玩具模型。
 
 另外提供两个便利属性：

@@ -1,11 +1,11 @@
 # 学习单元 Day 29：预分配 KV Cache 与原地写入
 
-> [`roadmap.md`](./roadmap.md)：**学习单元 Day 29**｜学习日 20｜预算 5 小时
+> [`roadmap.md`](./roadmap.md)：**学习单元 Day 29**｜学习日 20
 
 昨天的 `DynamicCache` 正确但低效——每轮 `concat` 都要重新分配和复制。
 今天做 `StaticCache`：一次分配到位，按位置原地写入。
 
-Notion 的硬要求：
+硬要求：
 
 > **禁止每轮重新分配整个缓存。**
 
@@ -109,7 +109,7 @@ def update(self, layer_idx, new_k, new_v, cache_position):
 
 ### off-by-one：今天最大的坑
 
-Notion 明确把「Cache 写入位置 off-by-one」列为必查错误。三个高危点：
+「Cache 写入位置 off-by-one」是必查错误。三个高危点：
 
 | 场景 | 正确 | 错误写法 | 后果 |
 |---|---|---|---|

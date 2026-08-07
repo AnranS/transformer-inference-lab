@@ -1,6 +1,6 @@
 # 学习单元 Day 13：RoPE 论文与公式
 
-> [`roadmap.md`](./roadmap.md)：**学习单元 Day 13**｜学习日 9｜预算 3 小时
+> [`roadmap.md`](./roadmap.md)：**学习单元 Day 13**｜学习日 9
 
 **今天不写代码。** 和 Day 6 一样，读论文 + 手算，把 RoPE 想透。明天（Day 14）才动 `rope.py`。
 
@@ -139,7 +139,7 @@ R_n k = [k_1 cos nθ - k_2 sin nθ,  k_1 sin nθ + k_2 cos nθ]
 
 ### 第四步：想清楚这对 Decode 意味着什么
 
-这是明天写代码、以及第 6 周调 KV Cache 的关键。
+这是明天写代码、以及 Day 26～30 调 KV Cache 的关键。
 
 > 生成第 101 个 token 时，它的绝对位置是 100。
 > 如果你在 Decode 时给它传 `position_ids = 0`（因为输入只有 1 个 token，
@@ -149,7 +149,7 @@ R_n k = [k_1 cos nθ - k_2 sin nθ,  k_1 sin nθ + k_2 cos nθ]
 它和历史 key 的相对距离全部错位，注意力彻底乱掉。
 
 **Decode 必须传正确的绝对位置**，也就是 `cache_position`。
-Notion 把「RoPE position 从 0 重新开始」列在第 6 周「必须排查的错误」第一条，
+「RoPE position 从 0 重新开始」是 KV Cache 阶段「必须排查的错误」的第一条，
 就是这个。今天先在笔记里写死这条结论。
 
 ## 任务 3：写 RoPE 概念笔记（50 分钟）

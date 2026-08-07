@@ -1,6 +1,6 @@
 # 学习单元 Day 20：最终 logits parity 与第 2 周门禁
 
-> [`roadmap.md`](./roadmap.md)：**学习单元 Day 20**｜学习日 14｜预算 5～6 小时
+> [`roadmap.md`](./roadmap.md)：**学习单元 Day 20**｜学习日 14
 
 第 2 周最后一天。今天把 Day 19 的逐层对齐推到**最终 logits**，然后过门禁。
 
@@ -81,7 +81,7 @@ Day 19 已经验证到 Block 级别，所以问题只能在这三个地方：
 | `head_dim` | 16, 32 | RoPE 频率数量 |
 
 `B=1, S=1` 这个组合特别值得测——它是 **Decode 阶段的形状**，
-提前在这里验证过，第 6 周能省很多事。
+提前在这里验证过，Day 26～30 能省很多事。
 
 注意组合会爆炸。**不要做全笛卡尔积**，选十来组有代表性的即可，
 控制整个测试套件在几秒内跑完。
@@ -93,7 +93,7 @@ Day 19 已经验证到 Block 级别，所以问题只能在这三个地方：
 
 ## 任务 3：反向定位练习（50 分钟）
 
-Notion 对第 2 周的要求里有一条能力目标：
+第 2 周的要求里有一条能力目标：
 
 > 能从 HF `LlamaDecoderLayer` 反向定位到自己的实现。
 
@@ -102,7 +102,7 @@ Notion 对第 2 周的要求里有一条能力目标：
 自测五个点：
 
 1. `self.self_attn = LlamaAttention(config=config, layer_idx=layer_idx)`
-   —— `layer_idx` 是干什么的？（提示：KV Cache 要用它索引，第 6 周会遇到）
+   —— `layer_idx` 是干什么的？（提示：KV Cache 要用它索引，Day 27 会遇到）
 2. `hidden_states, _ = self.self_attn(...)` —— 为什么返回 tuple？
 3. `apply_rotary_pos_emb(q, k, cos, sin)` —— 为什么参数里没有 `v`？
 4. `repeat_kv(key_states, self.num_key_value_groups)` —— 当前 `Hq=Hkv` 时它做了什么？
@@ -144,7 +144,7 @@ RoPE、RMSNorm、MLP、Block 这几项划掉（都实现了），
 - [ ] 故意破坏三处，测试都能变红
 - [ ] 容差表七级填满
 
-### 第 2 周段落验收（Notion 原文）
+### 第 2 周段落验收
 
 - [ ] 不看资料实现 RMSNorm
 - [ ] 不看资料实现 SwiGLU
@@ -159,7 +159,7 @@ RoPE、RMSNorm、MLP、Block 这几项划掉（都实现了），
 
 ## 任务 6（可选）：极小规模训练一致性（90 分钟）
 
-Notion 把这项列为**选做**。如果前五个任务提前做完，且今天还有精力，值得做——
+这项是**选做**。如果前五个任务提前做完，且今天还有精力，值得做——
 它能捕捉一类前面所有测试都测不到的问题。
 
 做法：用几十条极短的重复序列（比如 `"a b c a b c"`），

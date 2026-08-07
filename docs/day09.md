@@ -1,6 +1,6 @@
 # 学习单元 Day 09：Multi-Head Attention
 
-> [`roadmap.md`](./roadmap.md)：**学习单元 Day 9**｜学习日 6｜预算 5 小时
+> [`roadmap.md`](./roadmap.md)：**学习单元 Day 9**｜学习日 6
 
 把 Day 7～08 的单头 attention 扩成多头，并加上输入输出投影，
 得到一个完整的、可以放进 Decoder Block 的 Attention 模块。
@@ -100,7 +100,7 @@ x.transpose(1, 2).contiguous().view(B, S, D)    # 等价，更啰嗦
 
 ## 任务 3：五个常见 bug 逐个自查（70 分钟）
 
-Notion 明确列了五个高频 bug。**逐条对着自己的代码看一遍**，并且为每一条设计一个能抓住它的断言。
+五个高频 bug。**逐条对着自己的代码看一遍**，并且为每一条设计一个能抓住它的断言。
 
 ### Bug 1：Softmax 维度写错
 

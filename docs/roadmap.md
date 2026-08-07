@@ -1,14 +1,12 @@
 # 学习路线总纲
 
-本项目的唯一权威计划，来源是 Notion 文档《Transformer 推理基础：4 周高强度完整学习路线》。
+本项目的唯一权威计划：40 个学习单元的资料、任务、落点和门禁都在这里。
 
 **定位**：不训练大模型，而是从零实现一个现代 Decoder-only Transformer，
 并把它改造成支持生成、Prefill、Decode、GQA 和 KV Cache 的单卡推理器。
 
 **毕业标准**：自研模型与 Hugging Face 参考实现 logits 对齐；有无 KV Cache 的生成结果一致；
 完成 Prefill / Decode benchmark。
-
-**总投入**：约 108～112 小时。工作日 3～4 小时，周末 5～7 小时。
 
 **硬件**：前 4 周 CPU 即可；再往后使用 RTX 5070 Ti。
 
@@ -44,8 +42,8 @@
 | **学习单元** | Day 1 ～ Day 40 | 知识单元，**不等于自然日** |
 | **学习日** | 学习日 1 ～ 28 | 实际坐下来学的一天，完成 1～2 个学习单元 |
 
-原始 Notion 文档还有第三套「内容第 1～8 周」，那是**教材的章节划分**，
-被压缩进 4 个日历周执行。本文只用「学习单元」和「学习日」两套。
+教材式的「内容第 1～8 周」章节划分被压缩进 4 个日历周执行，
+本文只用「学习单元」和「学习日」两套编号。
 
 每日任务文档按**学习日**命名，文件名标出它覆盖的学习单元：
 
@@ -110,61 +108,61 @@ docs/day05.md       学习日 3 = 学习单元 Day 5
 
 # 一、28 个学习日的执行映射
 
-## 日历第 1 周（学习单元 Day 1～10）
+## 第 1 周（学习单元 Day 1～10）
 
-| 学习日 | 单元 | 主要任务 | 预算 |
-|---|---|---|---|
-| 1 | [Day 1～2](./day01-02.md) | Tokenizer、Embedding、shape 测试 | 3.5h |
-| 2 | [Day 3～4](./day03-04.md) | LM Head、自回归 baseline | 3.5h |
-| 3 | [Day 5](./day05.md) | 广播、数值测试、第一篇文档 | 2.5h |
-| 4 | [Day 6](./day06.md) | Attention 论文、QKV 手算 | 3h |
-| 5 | [Day 7～8](./day07-08.md) | Naive Attention、SDPA、Mask | 4h |
-| 6 | [Day 9](./day09.md) | Multi-Head Attention 完整实现 | 5h |
-| 7 | [Day 10](./day10.md) | HF 源码阅读、数值对齐、测试与文档 | 5h |
+| 学习日 | 单元 | 主要任务 |
+|---|---|---|
+| 1 | [Day 1～2](./day01-02.md) | Tokenizer、Embedding、shape 测试 |
+| 2 | [Day 3～4](./day03-04.md) | LM Head、自回归 baseline |
+| 3 | [Day 5](./day05.md) | 广播、数值测试、第一篇文档 |
+| 4 | [Day 6](./day06.md) | Attention 论文、QKV 手算 |
+| 5 | [Day 7～8](./day07-08.md) | Naive Attention、SDPA、Mask |
+| 6 | [Day 9](./day09.md) | Multi-Head Attention 完整实现 |
+| 7 | [Day 10](./day10.md) | HF 源码阅读、数值对齐、测试与文档 |
 
 **周门禁**：Naive Attention 与 PyTorch SDPA 数值对齐，causal / padding mask 测试全部通过。
 **未通过不得进入 Decoder Block。**
 
-## 日历第 2 周（学习单元 Day 11～20）
+## 第 2 周（学习单元 Day 11～20）
 
-| 学习日 | 单元 | 主要任务 | 预算 |
-|---|---|---|---|
-| 8 | [Day 11～12](./day11-12.md) | RMSNorm、SwiGLU、单测 | 4h |
-| 9 | [Day 13](./day13.md) | RoPE 论文、公式和手算 | 3h |
-| 10 | [Day 14～15](./day14-15.md) | RoPE 实现、Decoder Block | 4h |
-| 11 | [Day 16](./day16.md) | ModelConfig、尺寸约束、参数量 | 3h |
-| 12 | [Day 17～18](./day17-18.md) | 完整模型、数值容差设计 | 4h |
-| 13 | [Day 19](./day19.md) | 逐模块复制 HF 权重、逐层对齐 | 5h |
-| 14 | [Day 20](./day20.md) | 最终 logits parity、文档 | 5～6h |
+| 学习日 | 单元 | 主要任务 |
+|---|---|---|
+| 8 | [Day 11～12](./day11-12.md) | RMSNorm、SwiGLU、单测 |
+| 9 | [Day 13](./day13.md) | RoPE 论文、公式和手算 |
+| 10 | [Day 14～15](./day14-15.md) | RoPE 实现、Decoder Block |
+| 11 | [Day 16](./day16.md) | ModelConfig、尺寸约束、参数量 |
+| 12 | [Day 17～18](./day17-18.md) | 完整模型、数值容差设计 |
+| 13 | [Day 19](./day19.md) | 逐模块复制 HF 权重、逐层对齐 |
+| 14 | [Day 20](./day20.md) | 最终 logits parity、文档 |
 
 **周门禁**：RMSNorm、RoPE、Attention、MLP、Block 和最终 logits 均与 HF 参考实现对齐。
 
-## 日历第 3 周（学习单元 Day 21～30）
+## 第 3 周（学习单元 Day 21～30）
 
-| 学习日 | 单元 | 主要任务 | 预算 |
-|---|---|---|---|
-| 15 | [Day 21～22](./day21-22.md) | Greedy、EOS、Temperature、Top-k、Top-p | 4h |
-| 16 | [Day 23](./day23.md) | Batch、Padding、Mask、Position | 3h |
-| 17 | [Day 24～25](./day24-25.md) | HF generate 对照、Sampler 文档 | 4h |
-| 18 | [Day 26](./day26.md) | 无 Cache baseline、Prefill/Decode 分解 | 3h |
-| 19 | [Day 27～28](./day27-28.md) | 动态 KV Cache、Cache position | 4h |
-| 20 | [Day 29](./day29.md) | 预分配 KV Cache、原地写入 | 5h |
-| 21 | [Day 30](./day30.md) | 有/无 Cache 逐步 logits 与 token 等价性测试 | 5～6h |
+| 学习日 | 单元 | 主要任务 |
+|---|---|---|
+| 15 | [Day 21～22](./day21-22.md) | Greedy、EOS、Temperature、Top-k、Top-p |
+| 16 | [Day 23](./day23.md) | Batch、Padding、Mask、Position |
+| 17 | [Day 24～25](./day24-25.md) | HF generate 对照、Sampler 文档 |
+| 18 | [Day 26](./day26.md) | 无 Cache baseline、Prefill/Decode 分解 |
+| 19 | [Day 27～28](./day27-28.md) | 动态 KV Cache、Cache position |
+| 20 | [Day 29](./day29.md) | 预分配 KV Cache、原地写入 |
+| 21 | [Day 30](./day30.md) | 有/无 Cache 逐步 logits 与 token 等价性测试 |
 
 **周门禁**：Greedy 生成路径结果一致；Prefill 后每轮 Decode 只输入新 token；
 动态与预分配 Cache 测试通过。
 
-## 日历第 4 周（学习单元 Day 31～40）
+## 第 4 周（学习单元 Day 31～40）
 
-| 学习日 | 单元 | 主要任务 | 预算 |
-|---|---|---|---|
-| 22 | [Day 31～32](./day31-32.md) | GQA/MQA、真实模型 KV Cache 手算 | 4h |
-| 23 | [Day 33](./day33.md) | 可靠 Benchmark 工具与方法 | 3h |
-| 24 | [Day 34～35](./day34-35.md) | CUDA 异步、Prefill/Decode Profiler | 4h |
-| 25 | [Day 36](./day36.md) | 显存快照、Cache 增长分析 | 3h |
-| 26 | [Day 37～38](./day37-38.md) | inference_mode、SDPA、torch.compile 对照 | 4h |
-| 27 | [Day 39](./day39.md) | 完整实验矩阵、数据整理和复现检查 | 5h |
-| 28 | [Day 40](./day40.md) | 毕业项目验收、性能报告、README、下一阶段清单 | 6～7h |
+| 学习日 | 单元 | 主要任务 |
+|---|---|---|
+| 22 | [Day 31～32](./day31-32.md) | GQA/MQA、真实模型 KV Cache 手算 |
+| 23 | [Day 33](./day33.md) | 可靠 Benchmark 工具与方法 |
+| 24 | [Day 34～35](./day34-35.md) | CUDA 异步、Prefill/Decode Profiler |
+| 25 | [Day 36](./day36.md) | 显存快照、Cache 增长分析 |
+| 26 | [Day 37～38](./day37-38.md) | inference_mode、SDPA、torch.compile 对照 |
+| 27 | [Day 39](./day39.md) | 完整实验矩阵、数据整理和复现检查 |
+| 28 | [Day 40](./day40.md) | 毕业项目验收、性能报告、README、下一阶段清单 |
 
 **最终门禁**：所有正确性测试通过；README 可让别人复现；
 报告包含 Prefill、Decode、GQA、Cache、SDPA、BF16 的数据和结论。
@@ -492,7 +490,7 @@ logits             [B, S, V]
 
 # 四、目录结构
 
-Notion 规范的目标结构（`*` 表示已存在）：
+目标结构（`*` 表示已存在）：
 
 ```text
 transformer-inference-lab/
@@ -552,7 +550,7 @@ transformer-inference-lab/
 | 总纲 | `docs/roadmap.md` | 本文。全局计划、资料、进度 |
 | 每日任务 | `docs/dayXX-YY.md` | 当天做什么、过关标准 |
 | 细粒度笔记 | `docs/concepts/` | 边学边记，一个知识点一篇 |
-| 专题交付物 | `docs/NN-*.md` | Notion 规范要求，每周门禁产出，综合当周 concepts |
+| 专题交付物 | `docs/NN-*.md` | 每周门禁产出，综合当周 concepts |
 
 > **不要同时创建多个玩具仓库。** 所有阶段都在同一个项目上递增，
 > 方便看到「数学公式 → 正确实现 → 推理优化」的演进过程。
@@ -606,8 +604,7 @@ transformer-inference-lab/
 | 测试与对照 | 2h | pytest 与误差报告 |
 | 文档和复盘 | 1～2h | 专题文档 |
 
-> 这是**单个模块周**的模板（每个日历周执行两轮），不是单日预算。
-> 单日预算看第一节的执行映射表。
+> 这是**单个模块周**的模板，每个日历周执行两轮。
 
 ## 每天如何使用资料
 

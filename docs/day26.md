@@ -1,6 +1,6 @@
 # 学习单元 Day 26：无 Cache baseline 与 Prefill / Decode 分解
 
-> [`roadmap.md`](./roadmap.md)：**学习单元 Day 26**｜学习日 18｜预算 3 小时
+> [`roadmap.md`](./roadmap.md)：**学习单元 Day 26**｜学习日 18
 
 进入 KV Cache 这一段。今天**不写 Cache**，先做两件必要的准备：
 
@@ -77,7 +77,7 @@ Decode 时我们只要**最后一个位置**的输出（Day 3 的结论）。
 ## 任务 2：给 baseline 加计量（50 分钟）
 
 在 `benchmarks/bench_no_cache.py` 里包一层计量，记录每轮四项
-（Notion 明确要求的四项）：
+（四项）：
 
 | 指标 | 怎么拿 |
 |---|---|
@@ -106,7 +106,7 @@ CPU 上第 1 条不需要，但第 2 条依然需要（首次有内存分配和�
 
 ## 任务 3：量化浪费（60 分钟）
 
-新建 `notebooks/03_cache_growth.ipynb`。这是 Notion 要求的**「证明」**环节。
+新建 `notebooks/03_cache_growth.ipynb`。这是**「证明」**环节。
 
 ### 第一步：观察输入长度单调递增
 

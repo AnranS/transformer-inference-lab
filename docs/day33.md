@@ -1,11 +1,11 @@
 # 学习单元 Day 33：Prefill Benchmark 与可靠测量方法
 
-> [`roadmap.md`](./roadmap.md)：**学习单元 Day 33**｜学习日 23｜预算 3 小时
+> [`roadmap.md`](./roadmap.md)：**学习单元 Day 33**｜学习日 23
 
 今天学**怎么测得准**。这比测什么更重要——
 方法不对的话，后面几天的所有数据都是噪声。
 
-Notion 的阅读目标就是四个词：**warmup、同步、重复测量、结果比较**。
+阅读目标就是四个词：**warmup、同步、重复测量、结果比较**。
 
 ## 进度与落点
 
@@ -109,7 +109,7 @@ benchmark(fn, *, warmup=5, repeats=20, device) -> BenchResult
 
 ### 关于 CPU 上跑 benchmark
 
-Notion 说前 4 周 CPU 即可、之后用 RTX 5070 Ti。如果你现在在 CPU 上：
+前 4 周 CPU 即可，之后用 RTX 5070 Ti。如果你现在在 CPU 上：
 
 - **同步相关的代码依然要写**（为将来准备），只是运行时跳过
 - CPU 上的数据仍然有意义：**相对**趋势（batch 翻倍时间怎么变）是可比的
@@ -120,7 +120,7 @@ Notion 说前 4 周 CPU 即可、之后用 RTX 5070 Ti。如果你现在在 CPU 
 
 ## 任务 3：Prefill benchmark（四维扫描）（60 分钟）
 
-`benchmarks/bench_prefill.py`。Notion 指定的四个维度：
+`benchmarks/bench_prefill.py`。四个维度：
 
 | 维度 | 取值 |
 |---|---|
@@ -142,7 +142,7 @@ L=12, D=768, Hq=12, Hkv=12, I=3072, V=32000      （GPT-2 small 量级）
 CPU 上这个规模的 2048 长度 Prefill 可能要几秒，那就把 prompt 上限降到 1024，
 或者减少 repeats。**在文件里记录你实际用的配置。**
 
-### 记录的指标（Notion 要求三项）
+### 记录的指标（三项）
 
 | 指标 | 计算方式 |
 |---|---|

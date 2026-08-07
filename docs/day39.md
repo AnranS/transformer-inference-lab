@@ -1,6 +1,6 @@
 # 学习单元 Day 39：完整实验矩阵与复现检查
 
-> [`roadmap.md`](./roadmap.md)：**学习单元 Day 39**｜学习日 27｜预算 5 小时
+> [`roadmap.md`](./roadmap.md)：**学习单元 Day 39**｜学习日 27
 
 前六天的 benchmark 数据散落在各个脚本和 CSV 里。今天**统一口径、重跑一遍、
 确认可复现**，为明天的最终报告准备好干净的数据。
@@ -123,7 +123,7 @@ python benchmarks/run_all.py --quick        # 减少 repeats 和维度，用于�
 
 ## 任务 3：定义并跑完实验矩阵（100 分钟）
 
-Notion 要求报告包含六项：**Prefill、Decode、GQA、Cache、SDPA、BF16**。
+报告必须包含六项：**Prefill、Decode、GQA、Cache、SDPA、BF16**。
 按这六项定义矩阵：
 
 | 实验 | 变化维度 | 固定 | 输出的核心结论 |
@@ -145,7 +145,7 @@ Notion 要求报告包含六项：**Prefill、Decode、GQA、Cache、SDPA、BF16
 
 ### BF16 那一项要测三方面
 
-这一项容易只测速度，Notion 要求的是完整对照：
+这一项容易只测速度，需要的是完整对照：
 
 1. **速度**：Prefill 和 Decode 分别
 2. **显存**：权重 + Cache + 激活
