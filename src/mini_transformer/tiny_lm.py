@@ -21,19 +21,25 @@ class TinyLM(nn.Module):
 
     def __init__(self, vocab_size: int, hidden_size: int):
         super().__init__()
-        raise NotImplementedError
+        self.embedding = TokenEmbedding(vocab_size, hidden_size)
+        self.lm_head = LMHead(hidden_size, vocab_size)
 
     def forward(self, input_ids: torch.Tensor) -> torch.Tensor:
         """[B, S] → [B, S, V]。"""
-        raise NotImplementedError
+        hidden_output = self.embedding(input_ids)
+        logits = self.lm_head(hidden_output)
+        return logits
 
     def predict_next_token(self, input_ids: torch.Tensor) -> torch.Tensor:
         """取最后一个位置的 logits，argmax 得到下一个 token：[B, S] → [B]。"""
-        raise NotImplementedError
+        hidden_states = self.embedding(input_ids)
+        last_logits = self.lm_head.forward_last_position(hidden_states)
+        next_ids = last_logits.argmax(dim=-1)
+        return next_ids
 
     def tie_weights(self) -> None:
         """让 lm_head 和 embedding 共享同一个权重张量。
 
         两者形状本来就都是 [V, D]，可以直接共享，不需要转置。
         """
-        raise NotImplementedError
+        self.lm_head.proj.weight = self.embedding.embedding.weight

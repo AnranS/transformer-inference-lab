@@ -293,13 +293,21 @@ Attention 在 Day 06～09。
 
 ## 今日实验结论
 
-做完 notebook「4. logits 与 softmax」后回来补（任务 10）：
+1. **logits 不是概率。** 固定随机种子的一次 20 维实验为 `min=-1.5551`、
+   `max=2.0050`、`sum=6.9407`：有负数、有大于 1 的值，和也不是 1。
+   不变的是 logits 没有概率的取值或求和约束。
+2. **softmax 不改变 argmax。** 在 `[B=2, S=3, V=20]` 的实验中，
+   `logits.argmax(-1)` 与 `softmax(logits).argmax(-1)` 的六个位置逐元素完全一致。
+   原因是指数函数和除以正的归一化常数都保序，所以贪心解码不需要实际计算 softmax。
+3. **温度改变分布尖锐程度但不改变 argmax。** 固定随机种子下，
+   `T=0.5` 时最大概率为 `0.2893`、熵为 `2.0750`；`T=2.0` 时分别变为
+   `0.1006` 和 `2.8748`，更接近 20 类均匀分布的熵上界 `log(20)=2.9957`。
+   两种温度的 argmax 都是 18。
+4. **GPT-2 尺度 weight tying 确实减半。** `[50257, 768]` 的两份 fp32
+   权重从 `77.19M / 294.5 MiB` 变为一份 `38.60M / 147.2 MiB`；
+   `lm_head.weight is embedding.weight` 为真，改 embedding 后 LM Head 立即读到相同值。
 
-1. _待填：logits 的 min / max / sum 实测_
-2. _待填：softmax 前后 argmax 是否一致_
-3. _待填：不同温度下分布尖锐程度的变化_
-
-动手验证见 `notebooks/day03_logits_and_softmax.ipynb`（任务 2 新建）。
+动手验证见 `notebooks/day03_logits_and_softmax.ipynb` 的第 1～5 节。
 
 ## 面试题
 

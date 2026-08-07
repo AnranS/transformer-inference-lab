@@ -20,6 +20,8 @@
 | `attention_mask` | `[B, S]` | `1`=有效 token，`0`=PAD |
 | embedding weight | `[V, D]` | 每一行是一个 token 的向量 |
 | `hidden_states` | `[B, S, D]` | Embedding 查表后的连续表示 |
+| `logits` | `[B, S, V]` | LM Head 输出的未归一化词表分数，不是概率 |
+| `next_token_id` | `[B]` | 对最后一位 `logits[:, -1, :]` 在词表维 argmax 后的 token ID |
 
 ## 数据流
 
