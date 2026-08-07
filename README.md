@@ -1,44 +1,61 @@
 # Transformer Inference Lab
 
-从零手写 Transformer 推理引擎，边写边测，最终跑通 GPT-2。
+从零手写一个现代 Decoder-only Transformer 推理引擎，边写边测。
 
-## 主线
+目标不是训练大模型，而是把它改造成支持生成、Prefill、Decode、GQA 和 KV Cache 的单卡推理器。
+**毕业标准**：与 Hugging Face 参考实现 logits 对齐；有无 KV Cache 生成结果一致；完成 Prefill/Decode benchmark。
+
+完整计划见 **[docs/roadmap.md](docs/roadmap.md)**——40 个学习单元的资料、任务、落点和门禁都在那里。
+
+## 当前进度
+
+**2 / 40 学习单元完成。** 下一步：[docs/day03-04.md](docs/day03-04.md)（LM Head 与自回归循环）。
 
 ```text
-文本 → input_ids → Embedding 查表 → hidden_states → LM Head → logits → next token
-                   └─ Day 01 ─────────────────┘   └─ Day 02 ──────────────────┘
+文本 → input_ids → Embedding → hidden_states → LM Head → logits → next token ─┐
+       └── Day 1 ──┘└─ Day 2 ─┘                └──── Day 3 ────┘              │
+                                                拼回 input_ids，再来一轮 ←──────┘
+                                                      └─ Day 4 ─┘
+       ────── 已完成 ──────┘└────────────── 进行中 ──────────────┘
 ```
 
-## 文档怎么分
+已完成的部分**还没有位置概念、也没有上下文交互**（Attention 在 Day 6～9，RoPE 在 Day 14），
+所以现阶段生成的 token 序列没有实际意义。当前验证的是管道通不通，不是输出好不好。
 
-| 类型 | 目录 | 作用 |
+## 文档怎么找
+
+| 类型 | 位置 | 作用 |
 |------|------|------|
-| **每日任务** | `docs/dayXX.md` | 当天要做什么、过关标准、进度 |
-| **概念笔记** | `docs/concepts/` | 可复用的知识点，不和某一天任务绑死 |
+| **总纲** | [`docs/roadmap.md`](docs/roadmap.md) | 40 单元的计划、必读资料、进度。**每天从这里开始** |
+| **每日任务** | `docs/dayXX-YY.md` | 当天做什么、预算、过关标准 |
+| **细粒度笔记** | `docs/concepts/` | 边学边记，一个知识点一篇 |
+| **专题交付物** | `docs/NN-*.md` | 每周门禁产出，综合当周笔记 |
 
-当前任务：[docs/day02.md](docs/day02.md)（Day 01 已完成）
+文件名里的 `dayXX-YY` 是**学习单元**编号，不是自然日——一天完成 1～2 个单元。
+编号约定见 [roadmap 的「编号约定」一节](docs/roadmap.md#编号约定先看这个容易搞混)。
 
 ## 目录
 
 ```text
 docs/
-  day01.md                       # Day01 任务记录（已完成）
-  day02.md                       # Day02 任务记录（进行中）
+  roadmap.md                     # 总纲：40 单元计划与资料
+  00-tensor-conventions.md       # 张量约定（全项目共用）
+  day01-02.md                    # Tokenizer + Embedding（已完成）
+  day03-04.md                    # LM Head + 自回归循环（进行中）
   concepts/
-    00-tokenizer.md              # Tokenizer 概念
-    00-tensor-conventions.md     # 张量约定
-    01-embedding.md              # Embedding 概念
-    02-lm-head.md                # LM Head 与 logits（Day02 产出）
-experiments/
-  tokenizer_playground.ipynb
+    00-tokenizer.md
+    01-embedding.md
+    02-lm-head.md
+notebooks/
+  tokenizer_playground.ipynb     # Day 1～4 的动手实验
 src/mini_transformer/
-  embedding.py
-  lm_head.py                     # Day02 产出
-  tiny_lm.py                     # Day02 产出
+  embedding.py                   # Day 2
 tests/
-  test_embedding.py
-  test_lm_head.py                # Day02 产出
+  test_embedding.py              # Day 2
 ```
+
+后续会出现的 `attention.py`、`rope.py`、`cache.py`、`benchmarks/` 等文件，
+以及它们各自属于哪个学习单元，见 [roadmap 的目录结构一节](docs/roadmap.md#四目录结构)。
 
 ## 环境
 
@@ -56,11 +73,11 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install -e . && pip install pytest
 ```
 
-已验证组合：Python 3.12 + torch 2.13 + transformers 5.14。
+已验证组合：Python 3.12 + torch 2.13 + transformers 5.14。前 4 周 CPU 即可。
 
 ## 跑 notebook 前先缓存模型
 
-`experiments/tokenizer_playground.ipynb` 里设了 `HF_HUB_OFFLINE=1` 和
+`notebooks/tokenizer_playground.ipynb` 里设了 `HF_HUB_OFFLINE=1` 和
 `local_files_only=True`（避免 kernel 被代理卡死），所以**模型必须先下载到本地缓存**，
 否则会直接报错。第一次跑之前，在联网环境下执行：
 

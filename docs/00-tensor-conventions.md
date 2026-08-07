@@ -1,4 +1,7 @@
-# 张量约定（Day 01）
+# 张量约定
+
+> 全项目共用的符号与形状规范，随学习推进持续扩充。
+> 完整符号表（含 Attention / GQA 相关的 `Hq`、`Hkv`、`Dh`）见 [`roadmap.md`](./roadmap.md)。
 
 ## 符号
 
@@ -26,7 +29,7 @@
   → TokenEmbedding(weight [V, D]) → hidden_states [B, S, D]
 ```
 
-Embedding 细节见 [`01-embedding.md`](./01-embedding.md)。
+Embedding 细节见 [`concepts/01-embedding.md`](./concepts/01-embedding.md)。
 
 ## 今日实验结论
 

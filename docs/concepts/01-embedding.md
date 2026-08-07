@@ -100,5 +100,5 @@ GPT-2 的输出层 `lm_head` 和输入的 token embedding 是**同一个** `[V, 
   --TokenEmbedding---->  hidden_states [B, S, D]
 ```
 
-动手验证见 [`../../experiments/tokenizer_playground.ipynb`](../../experiments/tokenizer_playground.ipynb)
+动手验证见 [`../../notebooks/tokenizer_playground.ipynb`](../../notebooks/tokenizer_playground.ipynb)
 的「3. Embedding 查表实验」一节。

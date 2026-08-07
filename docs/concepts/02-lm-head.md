@@ -1,0 +1,208 @@
+# LM Head 与 logits 笔记
+
+## 形状约定
+
+| 对象 | 形状 | 含义 |
+|------|------|------|
+| 输入 `hidden_states` | `[B, S, D]` | 每个位置的连续表示 |
+| LM Head 权重 | `[V, D]` | 每一行对应词表里一个 token |
+| 输出 `logits` | `[B, S, V]` | 未归一化分数，**不是概率** |
+
+`logits[b, i, v]` 读作：第 `b` 条序列、第 `i` 个位置上，token `v` 作为下一个词的分数。
+
+## LM Head 就是一个 `nn.Linear(D, V)`
+
+Embedding 把离散 ID 换成 `D` 维向量，LM Head 做的是**反向的事**：把 `D` 维向量换回词表上的分数。
+
+```text
+hidden [B, S, D] --nn.Linear(D, V)--> logits [B, S, V]
+```
+
+`nn.Linear` 只作用在**最后一维**，前面的 `B`、`S` 原样保留。所以同一个 LM Head 既能吃 `[B, S, D]`
+也能吃 `[B, D]`，输出分别是 `[B, S, V]` 和 `[B, V]`——任务 4 那条「只算最后一位」的路径就是靠这个性质。
+
+## 为什么 `weight` 是 `[V, D]` 而不是 `[D, V]`
+
+`nn.Linear(in, out)` 的 `weight` 形状是 `[out, in]`，前向算的是：
+
+```text
+y = x @ weight.T + bias
+```
+
+看起来多此一举，实际有两个理由：
+
+1. **内存局部性**：PyTorch 张量是行优先存储。`[V, D]` 意味着「某个 token 的 D 个权重是连续的」，
+   算一个输出分数时能顺序读一整行，cache 友好。换成 `[D, V]` 每次都要跨步长跳着读。
+2. **和 Embedding 对齐**：`nn.Embedding(V, D).weight` 也是 `[V, D]`。两者形状**天然相同**，
+   所以 weight tying 可以直接共享同一个张量，不需要转置。
+
+第 2 条是 weight tying 能成立的技术前提，记住它。
+
+## logits 不是概率
+
+三个特征，实验里会亲眼确认：
+
+- 可以是**负数**
+- 可以**大于 1**
+- 一行加起来**不等于 1**
+
+它就是个分数，唯一有意义的信息是**相对大小**。给整行 logits 同时加上一个常数，
+softmax 之后的概率完全不变（`exp(x+c)/Σexp(x+c)` 上下同时约掉 `e^c`）——
+这个性质也是 softmax 数值稳定实现里「先减去最大值」的依据。
+
+## softmax 做了什么，什么时候才需要它
+
+```text
+p_v = exp(logit_v) / Σ_j exp(logit_j)
+```
+
+作用是把任意实数压到 `[0, 1]` 且总和为 1，于是可以当概率用。
+
+关键在于 **softmax 是严格单调变换**：logit 越大，概率越大，**不改变排序**。
+
+于是：
+
+```text
+logits.argmax(-1)  ==  softmax(logits).argmax(-1)
+```
+
+**推论：贪心解码根本不需要算 softmax。** 只要最大的那一个，直接对 logits 取 argmax 就行。
+
+真正需要 softmax 的场合只有三类——需要**概率数值本身**的时候：
+
+| 场景 | 为什么需要 |
+|------|-----------|
+| 采样（top-k / top-p / 温度采样） | 要按概率抽签，必须有归一化的分布 |
+| 算困惑度 / loss | 交叉熵定义在概率上 |
+| 看置信度 | 「模型有多确定」要用概率表达 |
+
+在 GPT-2 尺度上，每生成一个 token 就对 50257 个数做一次 softmax，
+如果只是贪心解码，那是纯浪费。
+
+## 温度
+
+采样前先把 logits 除以温度 `T`，再 softmax：
+
+```text
+softmax(logits / T)
+```
+
+| `T` | 效果 |
+|-----|------|
+| `< 1` | 放大差距，分布更**尖**，更确定、更保守 |
+| `= 1` | 原始分布 |
+| `> 1` | 压缩差距，分布更**平**，更随机、更有创造性 |
+
+两个极限值得记：`T → 0` 退化成 argmax（贪心），`T → ∞` 退化成词表上的均匀分布。
+
+注意除以 `T` 是**单调**的（`T > 0`），所以温度同样不改变排序——它改变的只是概率的**相对差距**，
+因此只对采样有意义，对贪心解码毫无影响。
+
+## 为什么 GPT-2 的 lm_head 是 `bias=False`
+
+```python
+nn.Linear(n_embd, vocab_size, bias=False)
+```
+
+两个原因：
+
+1. **weight tying 的必然结果**：既然要和 Embedding 共享权重，而 Embedding 本来没有 bias，
+   那输出侧自然也没有。
+2. **bias 在这里帮不上忙**：logits 上的 bias 是个和上下文**无关**的常数偏移，
+   每个 token 加一个固定分数，效果相当于一个全局词频先验。
+   这个信息模型从数据里本来就学得到，额外加 `V` 个参数收益很小。
+
+## 因果语言模型里的位置错位
+
+这是任务 4 之前必须想清楚的：
+
+```text
+位置 i 的 logits，预测的是位置 i+1 的 token
+```
+
+因为因果 mask 保证位置 `i` 只能看到 `0..i`，它手上的信息刚好是「预测下一个」所需的全部。
+
+所以喂进 `S` 个 token，会得到 `S` 组 logits，最后一组预测的是**第 S+1 个 token**——那才是我们要的。
+前面 `S-1` 组预测的都是**已经知道**的 token。
+
+训练时这 `S-1` 组不是废物：teacher forcing 下每个位置都要和真实的下一个 token 算 loss，
+一次前向能产生 `S` 个训练信号，这是 Transformer 训练效率高的原因之一。
+
+**推理时它们才是废物。** 推理和训练在这里行为不同，是很多人第一次写推理引擎白白浪费算力的地方。
+
+## 推理只需要最后一个位置
+
+既然解码只用 `logits[:, -1, :]`，那先算完整个 `[B, S, V]` 再切片就是白做功。
+在 GPT-2 尺度（`D=768, V=50257`）上差距是：
+
+| | 矩阵乘 | FLOP |
+|---|---|---|
+| 预填充全量 | `[1, 1024, 768] @ [768, 50257]` | 79.0 GFLOP |
+| 只算最后一位 | `[1, 1, 768] @ [768, 50257]` | 0.077 GFLOP |
+
+**1024 倍。** 正确做法是切片**在矩阵乘之前**做：先把 hidden 取成 `[B, 1, D]`（或 `[B, D]`），
+再送进 LM Head。所以 `LMHead` 要留一条只处理最后一位的路径。
+
+顺带说清一个容易混的点：这个优化**只对解码步有效**。
+预填充阶段如果要算 loss 或做投机解码验证，仍然需要全量 logits。
+
+## Weight tying
+
+GPT-2 的 `lm_head.weight` 和 `wte.weight` 是**同一个张量**（`GPT2Config().tie_word_embeddings` 为 `True`）。
+
+参数量对比：
+
+```text
+untied  两份 [50257, 768]  77.2M 参数  fp32 294 MB
+tied    一份 [50257, 768]  38.6M 参数  fp32 147 MB
+```
+
+省下的 38.6M 参数，比 GPT-2 small 全模型 124M 的四分之一还多。
+
+**为什么共享是合理的**，比省参数更重要：
+
+```text
+logits_v = hidden · weight[v]
+```
+
+第 `v` 个分数就是 hidden 向量和「token v 的 embedding 向量」的**点积**，
+也就是两者的相似度。所以 LM Head 在问的是：
+
+> 当前这个隐藏状态，和词表里哪个 token 的向量最像？
+
+输入侧用这张表把 token 变成向量，输出侧用同一张表把向量比回 token——
+既对称又省一半参数。
+
+## 和流水线的关系
+
+```text
+文本
+  --tokenizer.encode-->  input_ids [B, S]      (torch.long)
+  --TokenEmbedding---->  hidden_states [B, S, D]
+  --LMHead------------>  logits [B, S, V]
+  --取 [:, -1, :]------>  [B, V]
+  --argmax------------>  next_token_id [B]
+```
+
+Embedding 侧见 [`01-embedding.md`](./01-embedding.md)，符号表见
+[`../00-tensor-conventions.md`](../00-tensor-conventions.md)。
+
+注意此时链路里**还没有位置信息**（Day 01 已验证 Token Embedding 查不出位置），
+所以预测结果没有实际意义。Positional Embedding 在 Day 03 补。
+
+## 今日实验结论
+
+做完 notebook「4. logits 与 softmax」后回来补（任务 7）：
+
+1. _待填：logits 的 min / max / sum 实测_
+2. _待填：softmax 前后 argmax 是否一致_
+3. _待填：不同温度下分布尖锐程度的变化_
+
+动手验证见 [`../../notebooks/tokenizer_playground.ipynb`](../../notebooks/tokenizer_playground.ipynb)。
+
+## 面试题
+
+**生成第 101 个 token 时，LM Head 需要对多少个位置做矩阵乘？**
+
+**1 个。** 只有最后一个位置的 logits 会用于预测下一个 token，
+前面 100 个位置算了也是丢掉。训练时不同——每个位置的 logits 都要参与算 loss。

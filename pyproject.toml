@@ -18,7 +18,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest>=8",
-    "ipykernel>=6",  # experiments/ 下的 notebook 需要
+    "ipykernel>=6",  # notebooks/ 下的 notebook 需要
 ]
 
 [tool.setuptools.packages.find]
