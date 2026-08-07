@@ -20,7 +20,7 @@
 | ⬜ | 任务 3：反向定位练习 | `docs/concepts/07-hf-llama-attention.md` |
 | ⬜ | 任务 4：容差表收尾 | `docs/concepts/05-numerical-tolerance.md` |
 | ⬜ | 任务 5：第 2 周门禁与段落验收 | 本文末 |
-| ⬜ | 任务 6（可选）：极小规模训练一致性 | `notebooks/03_tiny_training.ipynb` |
+| ⬜ | 任务 6（可选）：极小规模训练一致性 | `notebooks/day20_tiny_training.ipynb` |
 
 ## 学习资料
 
@@ -169,7 +169,7 @@ RoPE、RMSNorm、MLP、Block 这几项划掉（都实现了），
 比如某个 `detach()` 用错了、某处 `no_grad` 范围不对。
 这类问题在纯前向的 parity 里完全看不出来。
 
-新建 `notebooks/03_tiny_training.ipynb`。**如果时间不够就跳过**，
+新建 `notebooks/day20_tiny_training.ipynb`。**如果时间不够就跳过**，
 在笔记里记一句「已知未验证：梯度路径一致性」即可。
 本项目是纯推理项目，这个风险可以接受。
 

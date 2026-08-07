@@ -1,5 +1,41 @@
 # LM Head 与 logits 笔记
 
+## 符号
+
+| 符号 | 含义 | 谁决定 | GPT-2 small |
+|------|------|------|------|
+| `B` | Batch size，一次喂给模型的样本数 | 运行时 | 任意 |
+| `S` | Sequence length，**当前这个张量**的序列长度 | 运行时 | 上限 1024 |
+| `D` | Hidden size，隐藏维度 | 模型结构 | 768 |
+| `V` | Vocabulary size，词表大小 | 模型结构 | 50257 |
+
+`B` 和 `S` 由输入决定，`D` 和 `V` 由模型结构固定死——这个区分在读形状时很有用：
+`nn.Linear` 只动最后一维，所以它认识 `D` 和 `V`，对 `B`、`S` 一概不管。
+
+### `S` 不是「最大 token 数」
+
+三个东西容易混成一个，但它们是分开的：
+
+| | 是什么 | 例子 |
+|---|---|---|
+| 单条文本的 token 数 | tokenizer 编码后的真实长度，每条都不同 | 「你好」→ 2 |
+| `S` | **当前张量**的序列维长度。一个 batch 里长短不齐时，PAD 补齐到最长那条 | `[4, 12]` 里 `S=12` |
+| 上下文上限 | 模型配置（GPT-2 的 `n_positions`），`S` 的天花板 | 1024 |
+
+所以 `S` 是个**运行时的值**，不是上限。它甚至在一次生成过程中会不断变化：
+自回归解码每吐一个 token 就把它拼回输入，下一轮的 `S` 就大 1。
+
+```text
+第 1 轮  input_ids [1, 5]   S=5
+第 2 轮  input_ids [1, 6]   S=6
+第 3 轮  input_ids [1, 7]   S=7
+```
+
+`S` 每轮加 1、而前面那些位置其实**算过一遍了**，正是任务 8 要量化的浪费，
+也是 Day 26～30 上 KV Cache 的全部动机。
+
+全项目共用的符号表见 [`../00-tensor-conventions.md`](../00-tensor-conventions.md)。
+
 ## 形状约定
 
 | 对象 | 形状 | 含义 |
@@ -19,7 +55,7 @@ hidden [B, S, D] --nn.Linear(D, V)--> logits [B, S, V]
 ```
 
 `nn.Linear` 只作用在**最后一维**，前面的 `B`、`S` 原样保留。所以同一个 LM Head 既能吃 `[B, S, D]`
-也能吃 `[B, D]`，输出分别是 `[B, S, V]` 和 `[B, V]`——任务 4 那条「只算最后一位」的路径就是靠这个性质。
+也能吃 `[B, D]`，输出分别是 `[B, S, V]` 和 `[B, V]`——任务 3 那条「只算最后一位」的路径就是靠这个性质。
 
 ## 为什么 `weight` 是 `[V, D]` 而不是 `[D, V]`
 
@@ -188,17 +224,18 @@ Embedding 侧见 [`01-embedding.md`](./01-embedding.md)，符号表见
 [`../00-tensor-conventions.md`](../00-tensor-conventions.md)。
 
 注意此时链路里**还没有位置信息**（Day 01 已验证 Token Embedding 查不出位置），
-所以预测结果没有实际意义。Positional Embedding 在 Day 03 补。
+也没有 Attention，所以预测结果没有实际意义。Positional Embedding 要等 Day 14（RoPE），
+Attention 在 Day 06～09。
 
 ## 今日实验结论
 
-做完 notebook「4. logits 与 softmax」后回来补（任务 7）：
+做完 notebook「4. logits 与 softmax」后回来补（任务 10）：
 
 1. _待填：logits 的 min / max / sum 实测_
 2. _待填：softmax 前后 argmax 是否一致_
 3. _待填：不同温度下分布尖锐程度的变化_
 
-动手验证见 [`../../notebooks/tokenizer_playground.ipynb`](../../notebooks/tokenizer_playground.ipynb)。
+动手验证见 `notebooks/day03_logits_and_softmax.ipynb`（任务 2 新建）。
 
 ## 面试题
 

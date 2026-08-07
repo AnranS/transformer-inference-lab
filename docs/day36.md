@@ -13,7 +13,7 @@ Day 31～32 算的是**理论值**，今天测**实际值**，并解释两者的
 | --- | --- | --- |
 | ⬜ | 任务 1：学习三种显存口径 | `docs/concepts/21-memory.md` |
 | ⬜ | 任务 2：显存构成拆解 | `benchmarks/bench_memory_breakdown.py` |
-| ⬜ | 任务 3：Cache 增长实测 vs 理论 | `notebooks/03_cache_growth.ipynb` |
+| ⬜ | 任务 3：Cache 增长实测 vs 理论 | `notebooks/day26_cache_growth.ipynb` |
 | ⬜ | 任务 4：生成内存快照 | `benchmarks/results/memory_snapshot.pickle` |
 
 ## 学习资料

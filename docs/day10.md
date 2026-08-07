@@ -17,7 +17,7 @@
 | ⬜ | 任务 1：读 HF `LlamaAttention` 源码 | 阅读笔记 |
 | ⬜ | 任务 2：建立源码到自研实现的对应表 | `docs/concepts/07-hf-llama-attention.md` |
 | ⬜ | 任务 3：补齐测试 | `tests/test_attention.py`、`tests/test_mask.py` |
-| ⬜ | 任务 4：Attention shape notebook | `notebooks/01_attention_shapes.ipynb` |
+| ⬜ | 任务 4：Attention shape notebook | `notebooks/day10_attention_shapes.ipynb` |
 | ⬜ | 任务 5：写第二篇专题文档 | **`docs/02-attention-and-masks.md`** |
 | ⬜ | 任务 6：门禁自查 | 本文末 |
 
@@ -105,7 +105,7 @@ def test_week1_gate_naive_attention_matches_sdpa():
 
 ## 任务 4：Attention shape notebook（45 分钟）
 
-新建 `notebooks/01_attention_shapes.ipynb`。这是目录规范里的第一个专用 notebook，
+新建 `notebooks/day10_attention_shapes.ipynb`。这是目录规范里的第一个专用 notebook，
 目的是**把形状变换可视化**，以后忘了随时回来看。
 
 四节：
@@ -164,7 +164,7 @@ def test_week1_gate_naive_attention_matches_sdpa():
 - [ ] 在 HF 源码里定位到了表格中的全部条目并记下行号
 - [ ] 完成 HF ↔ 自研实现对应表，缺口列清晰
 - [ ] `tests/test_attention.py` 与 `tests/test_mask.py` 整理完成，含 `Sq != Skv` 用例
-- [ ] `notebooks/01_attention_shapes.ipynb` 四节完成
+- [ ] `notebooks/day10_attention_shapes.ipynb` 四节完成
 - [ ] `docs/02-attention-and-masks.md` 九个部分完成，含具体误差数字
 - [ ] 门禁七条全部通过
 

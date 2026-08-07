@@ -60,7 +60,8 @@ docs/
     02-lm-head.md                # 已写
     03-*.md … 23-*.md            # 随学习进度补
 notebooks/
-  tokenizer_playground.ipynb     # Day 1～4 的动手实验
+  day01_tokenizer_playground.ipynb  # 已写，Day 1 的动手实验
+  day03_*.ipynb … day26_*.ipynb     # 随学习进度补，按学习单元命名
 src/mini_transformer/
   embedding.py                   # Day 2
 tests/
@@ -90,7 +91,7 @@ pip install -e . && pip install pytest
 
 ## 跑 notebook 前先缓存模型
 
-`notebooks/tokenizer_playground.ipynb` 里设了 `HF_HUB_OFFLINE=1` 和
+`notebooks/day01_tokenizer_playground.ipynb` 里设了 `HF_HUB_OFFLINE=1` 和
 `local_files_only=True`（避免 kernel 被代理卡死），所以**模型必须先下载到本地缓存**，
 否则会直接报错。第一次跑之前，在联网环境下执行：
 

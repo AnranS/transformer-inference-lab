@@ -13,7 +13,7 @@
 | --- | --- | --- |
 | ⬜ | 任务 1：学习 Cache 缓存的是什么 | `docs/concepts/16-kv-cache-basics.md` |
 | ⬜ | 任务 2：给 baseline 加计量 | `benchmarks/bench_no_cache.py` |
-| ⬜ | 任务 3：量化浪费 | `notebooks/03_cache_growth.ipynb` |
+| ⬜ | 任务 3：量化浪费 | `notebooks/day26_cache_growth.ipynb` |
 | ⬜ | 任务 4：Prefill / Decode 概念分解 | 同上笔记 |
 
 ## 学习资料
@@ -106,7 +106,7 @@ CPU 上第 1 条不需要，但第 2 条依然需要（首次有内存分配和�
 
 ## 任务 3：量化浪费（60 分钟）
 
-新建 `notebooks/03_cache_growth.ipynb`。这是**「证明」**环节。
+新建 `notebooks/day26_cache_growth.ipynb`。这是**「证明」**环节。
 
 ### 第一步：观察输入长度单调递增
 

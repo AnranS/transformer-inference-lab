@@ -13,7 +13,7 @@
 
 | 进度 | 任务 | 落点 |
 | --- | --- | --- |
-| ⬜ | 任务 1：量化 concat 的代价 | `notebooks/03_cache_growth.ipynb` |
+| ⬜ | 任务 1：量化 concat 的代价 | `notebooks/day26_cache_growth.ipynb` |
 | ⬜ | 任务 2：实现 `StaticCache` | `src/mini_transformer/cache.py` |
 | ⬜ | 任务 3：有效长度管理与 view 返回 | 同上 |
 | ⬜ | 任务 4：与 `DynamicCache` 等价性测试 | `tests/test_cache.py` |

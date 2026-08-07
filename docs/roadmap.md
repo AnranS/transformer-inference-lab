@@ -200,7 +200,7 @@ hidden state 如何变成词表 logits？为什么 LLM 必须逐 token 生成？
 
 | 单元 | 任务 | 落点 |
 |---|---|---|
-| Day 1 | 编解码 10 条中英文；打印 input_ids / attention_mask / special tokens；对比 left/right padding；记录同句在不同 tokenizer 下的 token 数 | `notebooks/tokenizer_playground.ipynb`、[`concepts/00-tokenizer.md`](./concepts/00-tokenizer.md) |
+| Day 1 | 编解码 10 条中英文；打印 input_ids / attention_mask / special tokens；对比 left/right padding；记录同句在不同 tokenizer 下的 token 数 | `notebooks/day01_tokenizer_playground.ipynb`、[`concepts/00-tokenizer.md`](./concepts/00-tokenizer.md) |
 | Day 2 | 实现 `[B,S] → [B,S,D]`；验证相同 token ID 得到相同向量；验证梯度关闭时仍能 forward | `src/mini_transformer/embedding.py`、`tests/test_embedding.py`、[`concepts/01-embedding.md`](./concepts/01-embedding.md) |
 | Day 3 | 最小 embedding → linear → logits 模型；取 `logits[:, -1, :]` 预测下一个 token；对比 tied / untied 参数量 | `src/mini_transformer/lm_head.py`、`tiny_lm.py`、`tests/test_lm_head.py`、[`concepts/02-lm-head.md`](./concepts/02-lm-head.md) |
 | Day 4 | 实现无 KV Cache 的自回归 baseline；理解每轮为什么重复计算全部历史 token | `src/mini_transformer/generate.py`、`tests/test_generation.py` |
@@ -231,7 +231,7 @@ hidden state 如何变成词表 logits？为什么 LLM 必须逐 token 生成？
 | Day 7 | 实现 `naive_attention`：`Q @ Kᵀ` → 除 `sqrt(Dh)` → 加 mask → 末维 Softmax → `probability @ V`。测试每行概率和约等于 1、与 SDPA 对齐、检查 FP32/BF16 容差 | `src/mini_transformer/attention.py` |
 | Day 8 | 画出 S=4 时的 mask。区分 causal / padding、Boolean / additive；注意 Decode 阶段 `Sq ≠ Skv` | `tests/test_mask.py` |
 | Day 9 | `[B,S,D]` 投影成 Q/K/V → reshape+transpose 到 `[B,H,S,Dh]` → 每 head 独立 Attention → 合并回 `[B,S,D]` → 输出投影 `Wo` | `src/mini_transformer/attention.py` |
-| Day 10 | 测试与文档 | `tests/test_attention.py`、`notebooks/01_attention_shapes.ipynb`、**`docs/02-attention-and-masks.md`** |
+| Day 10 | 测试与文档 | `tests/test_attention.py`、`notebooks/day10_attention_shapes.ipynb`、**`docs/02-attention-and-masks.md`** |
 
 **Day 9 常见 bug 清单**（写之前先看一遍）
 
@@ -272,7 +272,7 @@ x → RMSNorm → Attention → Residual Add → RMSNorm → SwiGLU MLP → Resi
 | Day 11 | 实现并与 `torch.nn.RMSNorm` 对齐。注意中间统计通常转 FP32 | `src/mini_transformer/norm.py` |
 | Day 12 | `gate = SiLU(Wgate x)`；`up = Wup x`；`output = Wdown(gate × up)`。记录三次矩阵乘的 shape、参数量和理论 FLOPs | `src/mini_transformer/mlp.py` |
 | Day 13 | 手推 RoPE 公式与相对位置性质 | 手写笔记 |
-| Day 14 | 生成 cos/sin cache；对 Q/K 应用旋转；支持 position offset；与 HF Llama RoPE 对齐 | `src/mini_transformer/rope.py`、`tests/test_rope.py`、`notebooks/02_rope_visualization.ipynb` |
+| Day 14 | 生成 cos/sin cache；对 Q/K 应用旋转；支持 position offset；与 HF Llama RoPE 对齐 | `src/mini_transformer/rope.py`、`tests/test_rope.py`、`notebooks/day14_rope_visualization.ipynb` |
 | Day 15 | Attention Pre-Norm → 第一次 Residual → MLP Pre-Norm → 第二次 Residual；dropout 在推理模式关闭 | `src/mini_transformer/block.py`、`tests/test_block.py`、**`docs/03-modern-decoder-block.md`** |
 
 **RoPE 要点**（Day 13～14 必须搞清）
@@ -378,7 +378,7 @@ token IDs → embedding → N × DecoderBlock → final RMSNorm → LM Head → 
 
 | 单元 | 任务 | 落点 |
 |---|---|---|
-| Day 26 | 记录每轮：输入长度、forward 时间、计算的 token 数、峰值显存。**证明**无 Cache 时历史 token 被重复计算 | `benchmarks/`、`notebooks/03_cache_growth.ipynb` |
+| Day 26 | 记录每轮：输入长度、forward 时间、计算的 token 数、峰值显存。**证明**无 Cache 时历史 token 被重复计算 | `benchmarks/`、`notebooks/day26_cache_growth.ipynb` |
 | Day 27 | 每层返回本轮新 K/V：`past [B,Hkv,S,Dh]` + `new [B,Hkv,1,Dh]` → `combined [B,Hkv,S+1,Dh]`。第一版允许 concat，**优先保证正确** | `src/mini_transformer/cache.py` |
 | Day 28 | 设计 `prefill(input_ids, attention_mask)` 和 `decode(next_token_ids, cache, cache_position)`；每层独立 Cache；Prefill 可多 token，Decode 通常单 token | `src/mini_transformer/cache.py` |
 | Day 29 | 初始化最大 batch / 最大 sequence；按 `cache_position` 原地写入；维护当前有效长度；返回有效 KV view；**禁止每轮重新分配整个缓存** | `src/mini_transformer/cache.py` |
@@ -411,7 +411,7 @@ token IDs → embedding → N × DecoderBlock → final RMSNorm → LM Head → 
 | Day 32 | 手算 `KV bytes = 2 × layers × batch × tokens × Hkv × Dh × bytes_per_element`。分别算 2 层玩具模型、7B/8B 级 GQA 模型、batch=1 与 16、context=2K/8K/32K | `benchmarks/bench_cache_memory.py` |
 | Day 33 | 控制变量：batch 1/2/4/8；prompt 128/512/1024/2048；dtype FP32/FP16/BF16；naive vs SDPA。记录 latency、tokens/s、峰值显存 | `benchmarks/bench_prefill.py` |
 | Day 34 | 固定 batch 改 context 长度；固定 context 改 batch；比较 MHA/GQA/MQA。记录单 token latency 与 tokens/s | `benchmarks/bench_decode.py` |
-| Day 35 | 观察 Prefill 大 GEMM、Decode 小 GEMM、Attention 与 MLP 时间占比、Cache concat 复制开销、预分配是否减少 allocation/copy、CPU launch 与 GPU kernel 时间 | `benchmarks/bench_attention.py`、`notebooks/03_cache_growth.ipynb` |
+| Day 35 | 观察 Prefill 大 GEMM、Decode 小 GEMM、Attention 与 MLP 时间占比、Cache concat 复制开销、预分配是否减少 allocation/copy、CPU launch 与 GPU kernel 时间 | `benchmarks/bench_attention.py`、`notebooks/day26_cache_growth.ipynb` |
 
 ## 学习单元 Day 36～40：毕业项目与报告
 
@@ -525,11 +525,14 @@ transformer-inference-lab/
 │   ├── bench_prefill.py             Day 33
 │   ├── bench_decode.py              Day 34
 │   └── bench_cache_memory.py        Day 32
-├── notebooks/
-│   ├── tokenizer_playground.ipynb   Day 1～4     *
-│   ├── 01_attention_shapes.ipynb    Day 10
-│   ├── 02_rope_visualization.ipynb  Day 14
-│   └── 03_cache_growth.ipynb        Day 26/35
+├── notebooks/                       文件名前缀 = 创建它的学习单元
+│   ├── day01_tokenizer_playground.ipynb   Day 1      *
+│   ├── day03_logits_and_softmax.ipynb     Day 3
+│   ├── day04_autoregressive_waste.ipynb   Day 4
+│   ├── day10_attention_shapes.ipynb       Day 10
+│   ├── day14_rope_visualization.ipynb     Day 14
+│   ├── day20_tiny_training.ipynb          Day 20（选做）
+│   └── day26_cache_growth.ipynb           Day 26/29/35
 └── docs/
     ├── roadmap.md                              *  本文
     ├── dayXX-YY.md                             *  每日任务
