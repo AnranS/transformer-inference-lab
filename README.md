@@ -6,6 +6,7 @@
 **毕业标准**：与 Hugging Face 参考实现 logits 对齐；有无 KV Cache 生成结果一致；完成 Prefill/Decode benchmark。
 
 完整计划见 **[docs/roadmap.md](docs/roadmap.md)**——40 个学习单元的资料、任务、落点和门禁都在那里。
+28 个学习日的详细任务书已全部写完（`docs/dayXX.md`），**这个仓库是自给自足的，不需要再查外部文档**。
 
 ## 当前进度
 
@@ -26,13 +27,25 @@
 
 | 类型 | 位置 | 作用 |
 |------|------|------|
-| **总纲** | [`docs/roadmap.md`](docs/roadmap.md) | 40 单元的计划、必读资料、进度。**每天从这里开始** |
-| **每日任务** | `docs/dayXX-YY.md` | 当天做什么、预算、过关标准 |
+| **总纲** | [`docs/roadmap.md`](docs/roadmap.md) | 40 单元的计划、必读资料、进度总览。**迷路了回这里** |
+| **每日任务** | `docs/dayXX-YY.md` | 当天做什么、预算、过关标准。**每天从这里开始** |
 | **细粒度笔记** | `docs/concepts/` | 边学边记，一个知识点一篇 |
 | **专题交付物** | `docs/NN-*.md` | 每周门禁产出，综合当周笔记 |
 
 文件名里的 `dayXX-YY` 是**学习单元**编号，不是自然日——一天完成 1～2 个单元。
 编号约定见 [roadmap 的「编号约定」一节](docs/roadmap.md#编号约定先看这个容易搞混)。
+
+每份日文档的结构固定：进度与落点表 → 必读/选读资料 → 按分钟切分的任务 →
+过关标准 → 一道面试式问题。**打开就能直接开工，不需要先读 roadmap。**
+
+四周的学习日文档：
+
+| 周 | 学习日文档 | 门禁 |
+|---|---|---|
+| 1 | [01-02](docs/day01-02.md) [03-04](docs/day03-04.md) [05](docs/day05.md) [06](docs/day06.md) [07-08](docs/day07-08.md) [09](docs/day09.md) [10](docs/day10.md) | Attention 与 SDPA 数值对齐 |
+| 2 | [11-12](docs/day11-12.md) [13](docs/day13.md) [14-15](docs/day14-15.md) [16](docs/day16.md) [17-18](docs/day17-18.md) [19](docs/day19.md) [20](docs/day20.md) | 最终 logits 与 HF 对齐 |
+| 3 | [21-22](docs/day21-22.md) [23](docs/day23.md) [24-25](docs/day24-25.md) [26](docs/day26.md) [27-28](docs/day27-28.md) [29](docs/day29.md) [30](docs/day30.md) | 有无 KV Cache 结果一致 |
+| 4 | [31-32](docs/day31-32.md) [33](docs/day33.md) [34-35](docs/day34-35.md) [36](docs/day36.md) [37-38](docs/day37-38.md) [39](docs/day39.md) [40](docs/day40.md) | 性能报告可复现 |
 
 ## 目录
 
@@ -40,12 +53,12 @@
 docs/
   roadmap.md                     # 总纲：40 单元计划与资料
   00-tensor-conventions.md       # 张量约定（全项目共用）
-  day01-02.md                    # Tokenizer + Embedding（已完成）
-  day03-04.md                    # LM Head + 自回归循环（进行中）
+  day01-02.md … day40.md         # 28 份学习日任务书（已全部写完）
   concepts/
-    00-tokenizer.md
-    01-embedding.md
-    02-lm-head.md
+    00-tokenizer.md              # 已写
+    01-embedding.md              # 已写
+    02-lm-head.md                # 已写
+    03-*.md … 23-*.md            # 随学习进度补
 notebooks/
   tokenizer_playground.ipynb     # Day 1～4 的动手实验
 src/mini_transformer/

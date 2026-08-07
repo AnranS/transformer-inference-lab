@@ -12,6 +12,29 @@
 
 **硬件**：前 4 周 CPU 即可；再往后使用 RTX 5070 Ti。
 
+## 学完之后应该能做到
+
+这九条是最终检验标准。任何时候觉得迷失了方向，回来看这一节。
+
+- [ ] 从 token ID 开始，讲清下一 token 的**完整计算路径**
+- [ ] 为每个主要算子**写出输入输出 shape**
+- [ ] 手写 causal self-attention、RMSNorm、SwiGLU、RoPE、GQA
+- [ ] 组装一个 Llama 风格 Decoder-only Transformer
+- [ ] 实现 greedy、temperature、top-k、top-p generation
+- [ ] 实现动态 KV Cache 和预分配 KV Cache
+- [ ] 区分 Prefill 和 Decode，并测量 **TTFT、TPOT 和显存**
+- [ ] 阅读 Hugging Face `LlamaAttention` 与 `LlamaDecoderLayer` 源码
+- [ ] 解释常见错误：mask、position、dtype、padding、cache offset 和 shape
+
+其中「测量 TTFT、TPOT」的两个指标：
+
+| 指标 | 全称 | 含义 | 主要由什么决定 |
+|---|---|---|---|
+| **TTFT** | Time To First Token | 从收到请求到吐出第一个 token 的时间 | Prefill（大 GEMM，计算密集） |
+| **TPOT** | Time Per Output Token | 之后每个 token 的平均间隔 | Decode（小 GEMM + 读 Cache，访存密集） |
+
+这两个指标性能特征相反，是推理优化里一切权衡的起点——第 4 周的 benchmark 全部围绕它们。
+
 ## 编号约定（先看这个，容易搞混）
 
 路线里有**两套编号**，不要混用：
@@ -46,42 +69,42 @@ docs/day05.md       学习日 3 = 学习单元 Day 5
 | Day 2 | Embedding | ✅ | [day01-02.md](./day01-02.md) |
 | Day 3 | LM Head 与 logits | 🔄 | [day03-04.md](./day03-04.md) |
 | Day 4 | 自回归循环 | 🔄 | [day03-04.md](./day03-04.md) |
-| Day 5 | 广播、数值测试、第一篇专题文档 | ⬜ | — |
-| Day 6 | Q、K、V | ⬜ | — |
-| Day 7 | Attention score 与 Softmax | ⬜ | — |
-| Day 8 | Causal Mask 与 Padding Mask | ⬜ | — |
-| Day 9 | Multi-Head Attention | ⬜ | — |
-| Day 10 | HF LlamaAttention 源码、数值对齐 | ⬜ | — |
-| Day 11 | RMSNorm | ⬜ | — |
-| Day 12 | SwiGLU MLP | ⬜ | — |
-| Day 13 | RoPE 论文与公式 | ⬜ | — |
-| Day 14 | RoPE 实现 | ⬜ | — |
-| Day 15 | Decoder Block | ⬜ | — |
-| Day 16 | ModelConfig | ⬜ | — |
-| Day 17 | 完整模型 | ⬜ | — |
-| Day 18 | 数值容差设计 | ⬜ | — |
-| Day 19 | 逐模块复制 HF 权重 | ⬜ | — |
-| Day 20 | 最终 logits parity | ⬜ | — |
-| Day 21 | Greedy 与停止条件 | ⬜ | — |
-| Day 22 | Temperature、Top-k、Top-p | ⬜ | — |
-| Day 23 | Batch 与 Padding | ⬜ | — |
-| Day 24 | 对照 HF generate | ⬜ | — |
-| Day 25 | Sampler 边界与文档 | ⬜ | — |
-| Day 26 | 无 Cache baseline、Prefill/Decode 分解 | ⬜ | — |
-| Day 27 | 动态 KV Cache | ⬜ | — |
-| Day 28 | Prefill / Decode API | ⬜ | — |
-| Day 29 | 预分配 KV Cache | ⬜ | — |
-| Day 30 | 有无 Cache 等价性测试 | ⬜ | — |
-| Day 31 | GQA / MQA | ⬜ | — |
-| Day 32 | 手算 KV Cache 显存 | ⬜ | — |
-| Day 33 | Prefill Benchmark | ⬜ | — |
-| Day 34 | Decode Benchmark、CUDA 异步 | ⬜ | — |
-| Day 35 | Profiler | ⬜ | — |
-| Day 36 | 显存快照、Cache 增长分析 | ⬜ | — |
-| Day 37 | inference_mode | ⬜ | — |
-| Day 38 | SDPA 与 torch.compile 对照 | ⬜ | — |
-| Day 39 | 完整实验矩阵与复现检查 | ⬜ | — |
-| Day 40 | 毕业验收、性能报告、README | ⬜ | — |
+| Day 5 | 广播、数值测试、第一篇专题文档 | ⬜ | [day05.md](./day05.md) |
+| Day 6 | Q、K、V | ⬜ | [day06.md](./day06.md) |
+| Day 7 | Attention score 与 Softmax | ⬜ | [day07-08.md](./day07-08.md) |
+| Day 8 | Causal Mask 与 Padding Mask | ⬜ | [day07-08.md](./day07-08.md) |
+| Day 9 | Multi-Head Attention | ⬜ | [day09.md](./day09.md) |
+| Day 10 | HF LlamaAttention 源码、数值对齐 | ⬜ | [day10.md](./day10.md) |
+| Day 11 | RMSNorm | ⬜ | [day11-12.md](./day11-12.md) |
+| Day 12 | SwiGLU MLP | ⬜ | [day11-12.md](./day11-12.md) |
+| Day 13 | RoPE 论文与公式 | ⬜ | [day13.md](./day13.md) |
+| Day 14 | RoPE 实现 | ⬜ | [day14-15.md](./day14-15.md) |
+| Day 15 | Decoder Block | ⬜ | [day14-15.md](./day14-15.md) |
+| Day 16 | ModelConfig | ⬜ | [day16.md](./day16.md) |
+| Day 17 | 完整模型 | ⬜ | [day17-18.md](./day17-18.md) |
+| Day 18 | 数值容差设计 | ⬜ | [day17-18.md](./day17-18.md) |
+| Day 19 | 逐模块复制 HF 权重 | ⬜ | [day19.md](./day19.md) |
+| Day 20 | 最终 logits parity | ⬜ | [day20.md](./day20.md) |
+| Day 21 | Greedy 与停止条件 | ⬜ | [day21-22.md](./day21-22.md) |
+| Day 22 | Temperature、Top-k、Top-p | ⬜ | [day21-22.md](./day21-22.md) |
+| Day 23 | Batch 与 Padding | ⬜ | [day23.md](./day23.md) |
+| Day 24 | 对照 HF generate | ⬜ | [day24-25.md](./day24-25.md) |
+| Day 25 | Sampler 边界与文档 | ⬜ | [day24-25.md](./day24-25.md) |
+| Day 26 | 无 Cache baseline、Prefill/Decode 分解 | ⬜ | [day26.md](./day26.md) |
+| Day 27 | 动态 KV Cache | ⬜ | [day27-28.md](./day27-28.md) |
+| Day 28 | Prefill / Decode API | ⬜ | [day27-28.md](./day27-28.md) |
+| Day 29 | 预分配 KV Cache | ⬜ | [day29.md](./day29.md) |
+| Day 30 | 有无 Cache 等价性测试 | ⬜ | [day30.md](./day30.md) |
+| Day 31 | GQA / MQA | ⬜ | [day31-32.md](./day31-32.md) |
+| Day 32 | 手算 KV Cache 显存 | ⬜ | [day31-32.md](./day31-32.md) |
+| Day 33 | Prefill Benchmark | ⬜ | [day33.md](./day33.md) |
+| Day 34 | Decode Benchmark、CUDA 异步 | ⬜ | [day34-35.md](./day34-35.md) |
+| Day 35 | Profiler | ⬜ | [day34-35.md](./day34-35.md) |
+| Day 36 | 显存快照、Cache 增长分析 | ⬜ | [day36.md](./day36.md) |
+| Day 37 | inference_mode | ⬜ | [day37-38.md](./day37-38.md) |
+| Day 38 | SDPA 与 torch.compile 对照 | ⬜ | [day37-38.md](./day37-38.md) |
+| Day 39 | 完整实验矩阵与复现检查 | ⬜ | [day39.md](./day39.md) |
+| Day 40 | 毕业验收、性能报告、README | ⬜ | [day40.md](./day40.md) |
 
 ---
 
@@ -91,13 +114,13 @@ docs/day05.md       学习日 3 = 学习单元 Day 5
 
 | 学习日 | 单元 | 主要任务 | 预算 |
 |---|---|---|---|
-| 1 | Day 1～2 | Tokenizer、Embedding、shape 测试 | 3.5h |
-| 2 | Day 3～4 | LM Head、自回归 baseline | 3.5h |
-| 3 | Day 5 | 广播、数值测试、第一篇文档 | 2.5h |
-| 4 | Day 6 | Attention 论文、QKV 手算 | 3h |
-| 5 | Day 7～8 | Naive Attention、SDPA、Mask | 4h |
-| 6 | Day 9 | Multi-Head Attention 完整实现 | 5h |
-| 7 | Day 10 | HF 源码阅读、数值对齐、测试与文档 | 5h |
+| 1 | [Day 1～2](./day01-02.md) | Tokenizer、Embedding、shape 测试 | 3.5h |
+| 2 | [Day 3～4](./day03-04.md) | LM Head、自回归 baseline | 3.5h |
+| 3 | [Day 5](./day05.md) | 广播、数值测试、第一篇文档 | 2.5h |
+| 4 | [Day 6](./day06.md) | Attention 论文、QKV 手算 | 3h |
+| 5 | [Day 7～8](./day07-08.md) | Naive Attention、SDPA、Mask | 4h |
+| 6 | [Day 9](./day09.md) | Multi-Head Attention 完整实现 | 5h |
+| 7 | [Day 10](./day10.md) | HF 源码阅读、数值对齐、测试与文档 | 5h |
 
 **周门禁**：Naive Attention 与 PyTorch SDPA 数值对齐，causal / padding mask 测试全部通过。
 **未通过不得进入 Decoder Block。**
@@ -106,13 +129,13 @@ docs/day05.md       学习日 3 = 学习单元 Day 5
 
 | 学习日 | 单元 | 主要任务 | 预算 |
 |---|---|---|---|
-| 8 | Day 11～12 | RMSNorm、SwiGLU、单测 | 4h |
-| 9 | Day 13 | RoPE 论文、公式和手算 | 3h |
-| 10 | Day 14～15 | RoPE 实现、Decoder Block | 4h |
-| 11 | Day 16 | ModelConfig、尺寸约束、参数量 | 3h |
-| 12 | Day 17～18 | 完整模型、数值容差设计 | 4h |
-| 13 | Day 19 | 逐模块复制 HF 权重、逐层对齐 | 5h |
-| 14 | Day 20 | 最终 logits parity、文档 | 5～6h |
+| 8 | [Day 11～12](./day11-12.md) | RMSNorm、SwiGLU、单测 | 4h |
+| 9 | [Day 13](./day13.md) | RoPE 论文、公式和手算 | 3h |
+| 10 | [Day 14～15](./day14-15.md) | RoPE 实现、Decoder Block | 4h |
+| 11 | [Day 16](./day16.md) | ModelConfig、尺寸约束、参数量 | 3h |
+| 12 | [Day 17～18](./day17-18.md) | 完整模型、数值容差设计 | 4h |
+| 13 | [Day 19](./day19.md) | 逐模块复制 HF 权重、逐层对齐 | 5h |
+| 14 | [Day 20](./day20.md) | 最终 logits parity、文档 | 5～6h |
 
 **周门禁**：RMSNorm、RoPE、Attention、MLP、Block 和最终 logits 均与 HF 参考实现对齐。
 
@@ -120,13 +143,13 @@ docs/day05.md       学习日 3 = 学习单元 Day 5
 
 | 学习日 | 单元 | 主要任务 | 预算 |
 |---|---|---|---|
-| 15 | Day 21～22 | Greedy、EOS、Temperature、Top-k、Top-p | 4h |
-| 16 | Day 23 | Batch、Padding、Mask、Position | 3h |
-| 17 | Day 24～25 | HF generate 对照、Sampler 文档 | 4h |
-| 18 | Day 26 | 无 Cache baseline、Prefill/Decode 分解 | 3h |
-| 19 | Day 27～28 | 动态 KV Cache、Cache position | 4h |
-| 20 | Day 29 | 预分配 KV Cache、原地写入 | 5h |
-| 21 | Day 30 | 有/无 Cache 逐步 logits 与 token 等价性测试 | 5～6h |
+| 15 | [Day 21～22](./day21-22.md) | Greedy、EOS、Temperature、Top-k、Top-p | 4h |
+| 16 | [Day 23](./day23.md) | Batch、Padding、Mask、Position | 3h |
+| 17 | [Day 24～25](./day24-25.md) | HF generate 对照、Sampler 文档 | 4h |
+| 18 | [Day 26](./day26.md) | 无 Cache baseline、Prefill/Decode 分解 | 3h |
+| 19 | [Day 27～28](./day27-28.md) | 动态 KV Cache、Cache position | 4h |
+| 20 | [Day 29](./day29.md) | 预分配 KV Cache、原地写入 | 5h |
+| 21 | [Day 30](./day30.md) | 有/无 Cache 逐步 logits 与 token 等价性测试 | 5～6h |
 
 **周门禁**：Greedy 生成路径结果一致；Prefill 后每轮 Decode 只输入新 token；
 动态与预分配 Cache 测试通过。
@@ -135,13 +158,13 @@ docs/day05.md       学习日 3 = 学习单元 Day 5
 
 | 学习日 | 单元 | 主要任务 | 预算 |
 |---|---|---|---|
-| 22 | Day 31～32 | GQA/MQA、真实模型 KV Cache 手算 | 4h |
-| 23 | Day 33 | 可靠 Benchmark 工具与方法 | 3h |
-| 24 | Day 34～35 | CUDA 异步、Prefill/Decode Profiler | 4h |
-| 25 | Day 36 | 显存快照、Cache 增长分析 | 3h |
-| 26 | Day 37～38 | inference_mode、SDPA、torch.compile 对照 | 4h |
-| 27 | Day 39 | 完整实验矩阵、数据整理和复现检查 | 5h |
-| 28 | Day 40 | 毕业项目验收、性能报告、README、下一阶段清单 | 6～7h |
+| 22 | [Day 31～32](./day31-32.md) | GQA/MQA、真实模型 KV Cache 手算 | 4h |
+| 23 | [Day 33](./day33.md) | 可靠 Benchmark 工具与方法 | 3h |
+| 24 | [Day 34～35](./day34-35.md) | CUDA 异步、Prefill/Decode Profiler | 4h |
+| 25 | [Day 36](./day36.md) | 显存快照、Cache 增长分析 | 3h |
+| 26 | [Day 37～38](./day37-38.md) | inference_mode、SDPA、torch.compile 对照 | 4h |
+| 27 | [Day 39](./day39.md) | 完整实验矩阵、数据整理和复现检查 | 5h |
+| 28 | [Day 40](./day40.md) | 毕业项目验收、性能报告、README、下一阶段清单 | 6～7h |
 
 **最终门禁**：所有正确性测试通过；README 可让别人复现；
 报告包含 Prefill、Decode、GQA、Cache、SDPA、BF16 的数据和结论。
