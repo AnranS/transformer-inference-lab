@@ -18,5 +18,18 @@ def generate_greedy(
       确定性 固定权重与输入，两次生成结果完全相同
       停止   eos_token_id 命中时提前返回，输出长度小于上限；None 表示不启用
       梯度   全程在 torch.inference_mode() 下运行
+      输出   每轮打印 batch 中每条序列选出的 next token，方便观察生成循环
     """
-    raise NotImplementedError
+    output_ids = input_ids
+    with torch.inference_mode():
+        for step in range(max_new_tokens):
+            logits = model(output_ids)
+            next_token = logits[:, -1, :].argmax(dim=-1, keepdim=True)
+            output_ids = torch.cat([output_ids, next_token], dim=1)
+            print(f"step {step + 1}: next_token={next_token.squeeze(1).tolist()}")
+
+            # Day 4 的简化版：仅当整个 batch 都生成 EOS 才停止。
+            # 部分序列先结束仍会继续生成；Day 21 用 finished mask 单独处理。
+            if eos_token_id is not None and torch.all(next_token == eos_token_id):
+                break
+    return output_ids
