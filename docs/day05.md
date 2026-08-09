@@ -11,11 +11,11 @@
 
 | 进度 | 任务 | 落点 |
 | --- | --- | --- |
-| ⬜ | 任务 1：学习广播规则 | [`00-tensor-conventions.md`](./00-tensor-conventions.md) |
-| ⬜ | 任务 2：广播陷阱实验 | notebook「6. 广播陷阱」 |
-| ⬜ | 任务 3：数值容差与 `assert_close` | `docs/concepts/05-numerical-tolerance.md` |
-| ⬜ | 任务 4：写第一篇专题文档 | **`docs/01-autoregressive-language-model.md`** |
-| ⬜ | 任务 5：第一段验收自查 | 本文末 |
+| ✅ | 任务 1：学习广播规则 | [`00-tensor-conventions.md`](./00-tensor-conventions.md) |
+| ✅ | 任务 2：广播陷阱实验 | [`../notebooks/day03_logits_and_softmax.ipynb`](../notebooks/day03_logits_and_softmax.ipynb)「7. 广播陷阱」 |
+| ✅ | 任务 3：数值容差与 `assert_close` | [`concepts/05-numerical-tolerance.md`](./concepts/05-numerical-tolerance.md) |
+| ✅ | 任务 4：写第一篇专题文档 | [`01-autoregressive-language-model.md`](./01-autoregressive-language-model.md) |
+| 🔄 | 任务 5：第一段验收自查 | 本文末；由你 review 后确认 |
 
 ## 学习资料
 
