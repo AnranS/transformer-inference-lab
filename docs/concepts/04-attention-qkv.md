@@ -359,7 +359,33 @@ self.lm_head.proj.weight = self.embedding.embedding.weight
 Self-Attention 本身只按内容匹配；如果不注入位置信息，交换 token 顺序不会给模型明确的顺序信号。
 原论文使用正弦/余弦位置编码。本项目将在 Day 13～14 使用 RoPE。
 
-## 11. 阅读后的自测
+## 11. Day 07 实现与数值实验
+
+`naive_attention` 已按公式实现：
+
+```text
+Q @ Kᵀ → / sqrt(Dh) → softmax(dim=-1) → probabilities @ V
+```
+
+测试使用 `Sq=4`、`Skv=6`，确认 Query 与 Key/Value 的序列长度可以不同，并在 fp32 下与
+`torch.nn.functional.scaled_dot_product_attention` 默认实现通过 `assert_close` 对齐。
+
+同一组输入切换到 bf16 后，本机实测输出相对 fp32 的最大绝对误差为：
+
+```text
+0.007325
+```
+
+这不是算法错误，而是 bf16 有效精度较低产生的正常舍入差异。正确性门禁仍以 fp32 对齐为准；
+bf16 用于后续性能和内存实验。
+
+当前测试还固化了三条契约：
+
+- 每个 Query 沿 Key 维的 softmax 权重和为 1；
+- Q/K 的 `Dh` 必须相同；
+- K/V 的 `Skv` 必须相同，但 `Sq != Skv` 合法。
+
+## 12. 阅读后的自测
 
 不看上文回答：
 
