@@ -14,7 +14,7 @@
 | --- | --- | --- |
 | ⬜ | 任务 1：读论文指定四节 | 阅读笔记 |
 | ⬜ | 任务 2：手算 4 token × 4 维完整 Attention | 纸笔 + notebook 核对 |
-| ⬜ | 任务 3：写 Q/K/V 概念笔记 | `docs/concepts/04-attention-qkv.md` |
+| ⬜ | 任务 3：阅读并掌握 Q/K/V 概念笔记 | [`concepts/04-attention-qkv.md`](./concepts/04-attention-qkv.md) |
 
 ## 学习资料
 
