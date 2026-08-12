@@ -1,3 +1,9 @@
+"""Attention mask 的 Prefill、Decode、Padding 与合成契约。
+
+重点验证 causal mask 在 Prefill 时是下三角，而在单步 Decode 时必须
+右下角对齐，让最新 Query 看见全部缓存 Key。
+"""
+
 import torch
 import torch.nn.functional as F
 
@@ -10,6 +16,7 @@ from mini_transformer.attention import (
 
 
 def test_decode_causal_mask_allows_all_cached_keys():
+    """Sq=1、Skv=5 模拟单步 Decode：最新 Query 可以读取全部缓存 Key。"""
     mask = build_causal_mask(
         query_len=1,
         key_value_len=5,
@@ -22,6 +29,7 @@ def test_decode_causal_mask_allows_all_cached_keys():
 
 
 def test_prefill_causal_mask_blocks_future_keys():
+    """Sq=Skv=4 模拟 Prefill：每个 Query 只能看到自己和更早的 Key。"""
     dtype = torch.float32
     blocked = torch.finfo(dtype).min
     expected = torch.tensor(
@@ -79,6 +87,7 @@ def test_padding_mask_expands_and_blocks_pad_keys():
 
 
 def test_combined_mask_broadcasts_without_overflow():
+    """minimum 合成保持有限值，避免两个 finfo.min 相加溢出成 -inf。"""
     dtype = torch.float32
     causal_mask = build_causal_mask(
         query_len=4,

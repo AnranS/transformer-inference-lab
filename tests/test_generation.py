@@ -40,6 +40,10 @@ def test_generates_exactly_max_new_tokens_without_eos():
 
 
 def test_stops_immediately_after_generating_eos():
+    """当前 baseline 只有整个 batch 同时命中 EOS 才停止。
+
+    Day 21 会加入 per-sequence finished mask，让 batch 内每条序列独立停止。
+    """
     model = AlwaysTokenModel(vocab_size=10, token_id=7)
     input_ids = torch.tensor([[1, 2], [3, 4]])
 

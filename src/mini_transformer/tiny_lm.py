@@ -11,7 +11,8 @@ class TinyLM(nn.Module):
     注意：这里**没有位置信息、也没有 Attention**（RoPE 在 Day 14，Attention 在 Day 6～9），
     所以预测出的 token 没有实际意义。现在验证的是管道通不通，不是输出好不好。
 
-    契约（任务 9 落到 tests/test_lm_head.py）：
+    TinyLM 自身的契约由 tests/test_tiny_lm.py 定义；LMHead 的投影契约
+    单独由 tests/test_lm_head.py 定义：
 
       形状   forward(input_ids [B, S]) → logits [B, S, V]
       解码   predict_next_token(input_ids [B, S]) → next_ids [B]，取值落在 [0, V)
@@ -31,7 +32,11 @@ class TinyLM(nn.Module):
         return logits
 
     def predict_next_token(self, input_ids: torch.Tensor) -> torch.Tensor:
-        """取最后一个位置的 logits，argmax 得到下一个 token：[B, S] → [B]。"""
+        """只计算最后位置的 logits，再用 argmax 得到下一个 token：[B, S] → [B]。
+
+        这里调用 forward_last_position，让 LM Head 的大矩阵乘只处理每条
+        序列的最后一个 hidden state，而不是先计算全部位置再切片。
+        """
         hidden_states = self.embedding(input_ids)
         last_logits = self.lm_head.forward_last_position(hidden_states)
         next_ids = last_logits.argmax(dim=-1)

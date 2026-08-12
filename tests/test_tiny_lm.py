@@ -1,3 +1,5 @@
+"""TinyLM 端到端 shape、最后位置预测与 weight tying 契约。"""
+
 import torch
 
 from mini_transformer.tiny_lm import TinyLM
@@ -42,6 +44,7 @@ def test_tie_weights_shares_the_same_parameter():
     assert model.lm_head.weight is model.embedding.embedding.weight
 
 def test_tie_weights_removes_duplicate_parameter():
+    """共享前有两份 [V,D]，共享后参数遍历只计同一个 [V,D] Parameter。"""
     model = TinyLM(vocab_size=128, hidden_size=16)
     untied_count = sum(parameter.numel() for parameter in model.parameters())
     model.tie_weights()

@@ -10,18 +10,18 @@
 
 ## 当前进度
 
-**2 / 40 学习单元完成。** 下一步：[docs/day03-04.md](docs/day03-04.md)（LM Head 与自回归循环）。
+**9 / 40 学习单元完成。** 下一步：[docs/day10.md](docs/day10.md)（Attention 模块封装与首周门禁）。
 
 ```text
-文本 → input_ids → Embedding → hidden_states → LM Head → logits → next token ─┐
-       └── Day 1 ──┘└─ Day 2 ─┘                └──── Day 3 ────┘              │
-                                                拼回 input_ids，再来一轮 ←──────┘
-                                                      └─ Day 4 ─┘
-       ────── 已完成 ──────┘└────────────── 进行中 ──────────────┘
+hidden_states [B,S,D]
+  → Q/K/V 投影 → split heads [B,H,S,Dh]
+  → scaled dot-product attention + mask
+  → merge heads [B,S,D] → Wo
+  └──────────────── Day 6～9 已完成 ────────────────┘
 ```
 
-已完成的部分**还没有位置概念、也没有上下文交互**（Attention 在 Day 6～9，RoPE 在 Day 14），
-所以现阶段生成的 token 序列没有实际意义。当前验证的是管道通不通，不是输出好不好。
+当前已经具备多头 Attention 与 causal/padding mask，但还没有完整 Decoder Block 和位置编码；
+RoPE 将在 Day 14 接入。
 
 ## 文档怎么找
 
@@ -62,15 +62,20 @@ docs/
 notebooks/
   day01_tokenizer_playground.ipynb  # 已写，Day 1 的动手实验
   day03_logits_and_softmax.ipynb    # 已写，含只算最后一位的耗时对比
-  day04_*.ipynb … day26_*.ipynb     # 随学习进度补，按学习单元命名
+  day08_attention_masks.ipynb       # 已写，Mask 可视化
+  day09_multi_head_attention.ipynb  # 已写，多头实现与数值验证
+  day10_*.ipynb … day26_*.ipynb     # 随学习进度补，按学习单元命名
 src/mini_transformer/
   embedding.py                   # Day 2，TokenEmbedding
   lm_head.py                     # Day 3，LMHead
-  tiny_lm.py                     # Day 3，骨架待实现
-  generate.py                    # Day 4，骨架待实现
+  tiny_lm.py                     # Day 3，TinyLM 与 weight tying
+  generate.py                    # Day 4，无 Cache 贪心生成
+  attention.py                   # Day 7～9，Attention、Mask 与 MHA
 tests/
   test_embedding.py              # Day 2，13 例
   test_lm_head.py                # Day 3，20 例
+  test_mask.py                   # Day 8，8 例
+  test_attention.py              # Day 7～9，19 例
 ```
 
 后续会出现的 `attention.py`、`rope.py`、`cache.py`、`benchmarks/` 等文件，

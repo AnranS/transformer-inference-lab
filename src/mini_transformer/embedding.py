@@ -33,6 +33,7 @@ class TokenEmbedding(nn.Module):
         self.check_token_range = check_token_range
 
     def forward(self, token_ids: torch.Tensor) -> torch.Tensor:
+        """查表完成 `[B, S] token_ids → [B, S, D] hidden_states`。"""
         if token_ids.dim() != 2:
             raise ValueError(
                 f"token_ids must be a 2D tensor [B, S], but got shape {tuple(token_ids.shape)}"

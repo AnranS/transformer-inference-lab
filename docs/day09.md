@@ -20,10 +20,10 @@
 
 | 进度 | 任务 | 落点 |
 | --- | --- | --- |
-| ⬜ | 任务 1：学习 head 的拆分与合并 | 阅读笔记 |
-| ⬜ | 任务 2：实现 `MultiHeadAttention` | `src/mini_transformer/attention.py` |
-| ⬜ | 任务 3：五个常见 bug 逐个自查 | 本文清单 |
-| ⬜ | 任务 4：单元测试 | `tests/test_attention.py` |
+| ✅ | 任务 1：学习 head 的拆分与合并 | [`../notebooks/day09_multi_head_attention.ipynb`](../notebooks/day09_multi_head_attention.ipynb) |
+| ✅ | 任务 2：实现 `MultiHeadAttention` | [`../src/mini_transformer/attention.py`](../src/mini_transformer/attention.py) |
+| ✅ | 任务 3：五个常见 bug 逐个自查 | 本文清单 + notebook 固定输入实验 |
+| ✅ | 任务 4：单元测试 | [`../tests/test_attention.py`](../tests/test_attention.py)（19 例） |
 
 ## 学习资料
 
@@ -173,12 +173,12 @@ Day 01～04 的教训继续适用：写完测试后**临时删掉被测逻辑，
 
 ## 过关标准
 
-- [ ] 能不看资料写出 `[B,S,D]` → `[B,Hq,S,Dh]` → `[B,S,D]` 的完整变换
-- [ ] 能解释为什么拆分后要 `transpose`，以及为什么合并要用 `reshape`
-- [ ] `Hq>1` 时与 SDPA 数值对齐（fp32）
-- [ ] 五个常见 bug 每个都有一条能抓住它的测试
-- [ ] 恒等权重测试通过，输出等于 Day 6 手算结果
-- [ ] `pytest -q` 全部通过
+- [x] 能不看资料写出 `[B,S,D]` → `[B,Hq,S,Dh]` → `[B,S,D]` 的完整变换
+- [x] 能解释为什么拆分后要 `transpose`，以及为什么合并要用 `reshape`
+- [x] `Hq>1` 时与 SDPA 数值对齐（fp32）
+- [x] 五个常见 bug 每个都有一条能抓住它的测试
+- [x] 恒等权重测试通过，输出等于 Day 6 手算结果
+- [x] `pytest -q` 全部通过
 
 ---
 

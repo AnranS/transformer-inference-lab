@@ -12,13 +12,14 @@ def generate_greedy(
 
     这是刻意保留的低效实现——Day 26～30 实现 KV Cache 时要拿它当对照。
 
-    契约（任务 9 落到 tests/test_generation.py）：
+    model(input_ids) 必须返回 [B, S, V] logits。生成循环的契约由
+    tests/test_generation.py 定义：
 
       长度   未命中 EOS 时，输出长度 = 输入长度 + max_new_tokens
       确定性 固定权重与输入，两次生成结果完全相同
       停止   eos_token_id 命中时提前返回，输出长度小于上限；None 表示不启用
       梯度   全程在 torch.inference_mode() 下运行
-      输出   每轮打印 batch 中每条序列选出的 next token，方便观察生成循环
+      调试   当前教学 baseline 每轮打印 next token；这不是稳定 API 保证
     """
     output_ids = input_ids
     with torch.inference_mode():

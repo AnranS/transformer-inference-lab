@@ -3,6 +3,7 @@ import math
 import torch
 from torch import nn
 
+
 def naive_attention(
     query: torch.Tensor,
     key: torch.Tensor,
@@ -15,20 +16,22 @@ def naive_attention(
     key:   [B, H, Skv, Dh]
     value: [B, H, Skv, Dh]
     output:[B, H, Sq, Dh]
+    attention_bias: 可广播到 [B, H, Sq, Skv] 的 additive mask；
+                    0 表示可见，极小值表示屏蔽。
     """
     if query.dim() != 4:
         raise ValueError(
-            f"query must be a [B, H, S, Dh] tensor, "
+            f"query must be a [B, H, Sq, Dh] tensor, "
             f"but got shape {tuple(query.shape)}"
         )
     if key.dim() != 4:
         raise ValueError(
-            f"key must be a [B, H, S, Dh] tensor, "
+            f"key must be a [B, H, Skv, Dh] tensor, "
             f"but got shape {tuple(key.shape)}"
         )
     if value.dim() != 4:
         raise ValueError(
-            f"value must be a [B, H, S, Dh] tensor, "
+            f"value must be a [B, H, Skv, Dh] tensor, "
             f"but got shape {tuple(value.shape)}"
         )
     if query.size(-1) != key.size(-1):
@@ -58,11 +61,11 @@ def build_causal_mask(
     device: torch.device,
     dtype: torch.dtype,
 ) -> torch.Tensor:
-    """构建因果掩码。
-    query_len: 查询序列长度。
-    key_value_len: 键值序列长度。
-    device: 设备。
-    dtype: 数据类型。
+    """构建右下角对齐的 [Sq, Skv] additive causal mask。
+
+    可见位置为 0，未来位置为 torch.finfo(dtype).min。
+    Query 对应最后 Sq 个绝对位置，所以 Decode 的 Sq=1、Skv>1
+    会返回全 0 的一行，让最新 Query 看见全部历史 Key。
     """
     mask = torch.zeros(query_len, key_value_len, device=device, dtype=dtype)
     query_position = torch.arange(key_value_len - query_len, key_value_len, device=device)
@@ -78,8 +81,9 @@ def build_padding_mask(
     dtype: torch.dtype,
 ) -> torch.Tensor:
     """把 [B, Skv] 的 1/0 mask 转成 [B, 1, 1, Skv] additive mask。
-    attention_mask: [B, Skv]
-    dtype: 数据类型。
+
+    attention_mask 中 1 表示真实 token，0 表示 PAD。输出中真实 token
+    对应 0，PAD 对应 torch.finfo(dtype).min。
     """
     expanded_mask = attention_mask[:, None, None, :]
     additive_mask = torch.zeros_like(expanded_mask, dtype=dtype)
@@ -91,14 +95,23 @@ def combine_attention_masks(
     causal_mask: torch.Tensor,
     padding_mask: torch.Tensor,
 ) -> torch.Tensor:
-    """把因果掩码和加性掩码结合成一个掩码。
-    causal_mask: [Sq, Skv]
-    padding_mask: [B, 1, 1, Skv]
+    """合成 causal [Sq, Skv] 与 padding [B, 1, 1, Skv] mask。
+
+    返回可广播到 [B, H, Sq, Skv] 的 [B, 1, Sq, Skv] additive mask。
+    使用 minimum 表达“任一来源屏蔽即屏蔽”，并避免两个 finfo.min
+    相加溢出成 -inf。
     """
-    # 两个 mask 的可见位置都是 0，取 minimum 表达“任一 mask 屏蔽即屏蔽”
     return torch.minimum(causal_mask, padding_mask)
 
+
 class MultiHeadAttention(nn.Module):
+    """最小多头自注意力模块：[B, S, D] → [B, S, D]。
+
+    Q/K/V 都由同一份 hidden_states 投影得到；四个投影分别是 Wq、Wk、
+    Wv 和 Wo。模块不会自动创建 causal/padding mask，调用方应先合成
+    additive mask，再通过 attn_mask 传入。
+    """
+
     def __init__(self, hidden_size: int, num_heads: int, *, bias: bool = False):
         super().__init__()
         if hidden_size <= 0:
@@ -129,7 +142,35 @@ class MultiHeadAttention(nn.Module):
         hidden_states: torch.Tensor,
         attn_mask: torch.Tensor | None = None,
     ) -> torch.Tensor:
-        pass
+        """计算多头自注意力。
+
+        attn_mask 应可广播到 attention scores [B, H, S, S]；
+        常用形状为 [S, S] 或 [B, 1, S, S]。
+        """
+        # 提前验证输入契约，避免让投影层或 shape 解包抛出难以定位的底层错误。
+        if hidden_states.dim() != 3:
+            raise ValueError(
+                f"hidden_states must be a [B, S, D] tensor, "
+                f"but got shape {tuple(hidden_states.shape)}"
+            )
+        # D 必须与初始化时的 hidden_size 一致，四个线性投影才能使用同一特征宽度。
+        if hidden_states.size(-1) != self.hidden_size:
+            raise ValueError(
+                f"hidden_states last dimension must match "
+                f"hidden_size={self.hidden_size}, "
+                f"but got {hidden_states.size(-1)}"
+            )
+        # 先做 Q/K/V 投影，再把 D 拆成 H 个 Dh，得到 [B, H, S, Dh]。
+        query = self._split_heads(self.q_proj(hidden_states))
+        key = self._split_heads(self.k_proj(hidden_states))
+        value = self._split_heads(self.v_proj(hidden_states))
+
+        # 每个 head 独立计算 Attention；attn_mask 在 softmax 前屏蔽不可见位置。
+        attention_output = naive_attention(query, key, value, attn_mask)
+
+        # 将多个 head 按原顺序合并回 [B, S, D]，再用 Wo 混合各头的信息。
+        merged_output = self._merge_heads(attention_output)
+        return self.out_proj(merged_output)
 
     def _split_heads(self, hidden_states: torch.Tensor) -> torch.Tensor:
         """[B, S, D] → [B, H, S, Dh]。"""

@@ -71,7 +71,7 @@ docs/day05.md       学习日 3 = 学习单元 Day 5
 | Day 6 | Q、K、V | ✅ | [day06.md](./day06.md) |
 | Day 7 | Attention score 与 Softmax | ✅ | [day07-08.md](./day07-08.md) |
 | Day 8 | Causal Mask 与 Padding Mask | ✅ | [day07-08.md](./day07-08.md) |
-| Day 9 | Multi-Head Attention | ⬜ | [day09.md](./day09.md) |
+| Day 9 | Multi-Head Attention | ✅ | [day09.md](./day09.md) |
 | Day 10 | HF LlamaAttention 源码、数值对齐 | ⬜ | [day10.md](./day10.md) |
 | Day 11 | RMSNorm | ⬜ | [day11-12.md](./day11-12.md) |
 | Day 12 | SwiGLU MLP | ⬜ | [day11-12.md](./day11-12.md) |
