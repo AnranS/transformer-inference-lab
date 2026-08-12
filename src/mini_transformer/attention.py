@@ -1,7 +1,7 @@
 import math
 
 import torch
-
+from torch import nn
 
 def naive_attention(
     query: torch.Tensor,
@@ -97,3 +97,48 @@ def combine_attention_masks(
     """
     # 两个 mask 的可见位置都是 0，取 minimum 表达“任一 mask 屏蔽即屏蔽”
     return torch.minimum(causal_mask, padding_mask)
+
+class MultiHeadAttention(nn.Module):
+    def __init__(self, hidden_size: int, num_heads: int, *, bias: bool = False):
+        super().__init__()
+        if hidden_size <= 0:
+            raise ValueError(
+                f"hidden_size must be positive, "
+                f"but got {hidden_size}"
+            )
+        if num_heads <= 0:
+            raise ValueError(
+                f"num_heads must be positive, "
+                f"but got {num_heads}"
+            )
+        if hidden_size % num_heads != 0:
+            raise ValueError(
+                f"hidden_size={hidden_size} must be divisible by "
+                f"num_heads={num_heads}"
+            )
+        self.hidden_size = hidden_size
+        self.num_heads = num_heads
+        self.head_dim = hidden_size // num_heads
+        self.q_proj = nn.Linear(hidden_size, hidden_size, bias=bias)
+        self.k_proj = nn.Linear(hidden_size, hidden_size, bias=bias)
+        self.v_proj = nn.Linear(hidden_size, hidden_size, bias=bias)
+        self.out_proj = nn.Linear(hidden_size, hidden_size, bias=bias)
+
+    def forward(
+        self,
+        hidden_states: torch.Tensor,
+        attn_mask: torch.Tensor | None = None,
+    ) -> torch.Tensor:
+        pass
+
+    def _split_heads(self, hidden_states: torch.Tensor) -> torch.Tensor:
+        """[B, S, D] → [B, H, S, Dh]。"""
+        b, s, _ = hidden_states.shape
+        split = hidden_states.view(b, s, self.num_heads, self.head_dim).transpose(1, 2)
+        return split
+
+    def _merge_heads(self, hidden_states: torch.Tensor) -> torch.Tensor:
+        """[B, H, S, Dh] → [B, S, D]。"""
+        b, _, s, _ = hidden_states.shape
+        merged = hidden_states.transpose(1, 2).reshape(b, s, self.hidden_size)
+        return merged

@@ -2,6 +2,7 @@ import torch
 import torch.nn.functional as F
 import pytest
 
+import mini_transformer.attention as attention
 from mini_transformer.attention import naive_attention
 
 
@@ -75,3 +76,60 @@ def test_records_bfloat16_attention_error():
     print(f"fp32 vs bf16 最大绝对误差: {max_absolute_error:.6f}")
     assert torch.isfinite(output_bf16).all()
     assert max_absolute_error > 0
+
+
+def test_multi_head_attention_rejects_indivisible_hidden_size():
+    assert hasattr(attention, "MultiHeadAttention")
+
+    with pytest.raises(ValueError, match="hidden_size.*num_heads"):
+        attention.MultiHeadAttention(hidden_size=10, num_heads=3)
+
+
+def test_multi_head_attention_rejects_non_positive_dimensions():
+    with pytest.raises(ValueError, match="hidden_size"):
+        attention.MultiHeadAttention(hidden_size=0, num_heads=2)
+
+    with pytest.raises(ValueError, match="num_heads"):
+        attention.MultiHeadAttention(hidden_size=8, num_heads=0)
+
+
+def test_multi_head_attention_has_four_bias_free_projections():
+    model = attention.MultiHeadAttention(
+        hidden_size=12,
+        num_heads=3,
+    )
+
+    for projection in (
+        model.q_proj,
+        model.k_proj,
+        model.v_proj,
+        model.out_proj,
+    ):
+        assert projection.weight.shape == (12, 12)
+        assert projection.bias is None
+
+
+def test_split_heads_moves_head_dimension_before_sequence():
+    model = attention.MultiHeadAttention(
+        hidden_size=12,
+        num_heads=3,
+    )
+    hidden_states = torch.randn(2, 4, 12)
+
+    split = model._split_heads(hidden_states)
+
+    assert split.shape == (2, 3, 4, 4)
+
+
+def test_merge_heads_reverses_split_heads():
+    model = attention.MultiHeadAttention(
+        hidden_size=12,
+        num_heads=3,
+    )
+    hidden_states = torch.arange(2 * 4 * 12).reshape(2, 4, 12)
+
+    split = model._split_heads(hidden_states)
+    merged = model._merge_heads(split)
+
+    assert merged.shape == (2, 4, 12)
+    assert torch.equal(merged, hidden_states)
