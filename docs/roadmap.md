@@ -65,12 +65,12 @@ docs/day05.md       学习日 3 = 学习单元 Day 5
 |---|---|---|---|
 | Day 1 | Tokenizer | ✅ | [day01-02.md](./day01-02.md) |
 | Day 2 | Embedding | ✅ | [day01-02.md](./day01-02.md) |
-| Day 3 | LM Head 与 logits | 🔄 | [day03-04.md](./day03-04.md) |
-| Day 4 | 自回归循环 | 🔄 | [day03-04.md](./day03-04.md) |
-| Day 5 | 广播、数值测试、第一篇专题文档 | ⬜ | [day05.md](./day05.md) |
-| Day 6 | Q、K、V | ⬜ | [day06.md](./day06.md) |
-| Day 7 | Attention score 与 Softmax | ⬜ | [day07-08.md](./day07-08.md) |
-| Day 8 | Causal Mask 与 Padding Mask | ⬜ | [day07-08.md](./day07-08.md) |
+| Day 3 | LM Head 与 logits | ✅ | [day03-04.md](./day03-04.md) |
+| Day 4 | 自回归循环 | ✅ | [day03-04.md](./day03-04.md) |
+| Day 5 | 广播、数值测试、第一篇专题文档 | 🔄 | [day05.md](./day05.md) |
+| Day 6 | Q、K、V | ✅ | [day06.md](./day06.md) |
+| Day 7 | Attention score 与 Softmax | ✅ | [day07-08.md](./day07-08.md) |
+| Day 8 | Causal Mask 与 Padding Mask | ✅ | [day07-08.md](./day07-08.md) |
 | Day 9 | Multi-Head Attention | ⬜ | [day09.md](./day09.md) |
 | Day 10 | HF LlamaAttention 源码、数值对齐 | ⬜ | [day10.md](./day10.md) |
 | Day 11 | RMSNorm | ⬜ | [day11-12.md](./day11-12.md) |

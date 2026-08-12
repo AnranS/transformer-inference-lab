@@ -133,12 +133,16 @@ QKᵀ → /sqrt(Dh) → + attention_bias → softmax → @V
 
 ### Red 4：合成与广播
 
-将 `[Sq, Skv]` causal mask 与 `[B, 1, 1, Skv]` padding mask 相加，断言：
+将 `[Sq, Skv]` causal mask 与 `[B, 1, 1, Skv]` padding mask 逐元素取最小值，断言：
 
 ```text
 combined.shape == [B, 1, Sq, Skv]
 (scores + combined).shape == [B, H, Sq, Skv]
 ```
+
+不能直接把两个 additive mask 相加：同一位置被两者同时屏蔽时，
+`finfo.min + finfo.min` 会溢出成 `-inf`。`torch.minimum` 表达的语义是
+「任一 mask 屏蔽即屏蔽」，同时保持屏蔽值有限。
 
 ### Red 5：接入 Attention
 
