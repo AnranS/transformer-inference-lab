@@ -98,4 +98,4 @@ P + (N - 1)
 ```
 
 例如 `P=1024`、`N=100` 时，前者为 107,350，后者为 1,123，约相差 95.6 倍。
-详见 [`concepts/03-autoregressive-loop.md`](./concepts/03-autoregressive-loop.md)。
+详见 [`concepts/03-autoregressive-loop.md`](../concepts/03-autoregressive-loop.md)。

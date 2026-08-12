@@ -8,7 +8,7 @@
 **毕业标准**：自研模型与 Hugging Face 参考实现 logits 对齐；有无 KV Cache 的生成结果一致；
 完成 Prefill / Decode benchmark。
 
-**硬件**：前 4 周 CPU 即可；再往后使用 RTX 5070 Ti。
+**硬件**：前 4 周 CPU 即可；性能与显存实验建议使用支持 BF16 的 CUDA GPU。
 
 ## 学完之后应该能做到
 
@@ -67,7 +67,7 @@ docs/day05.md       学习日 3 = 学习单元 Day 5
 | Day 2 | Embedding | ✅ | [day01-02.md](./day01-02.md) |
 | Day 3 | LM Head 与 logits | ✅ | [day03-04.md](./day03-04.md) |
 | Day 4 | 自回归循环 | ✅ | [day03-04.md](./day03-04.md) |
-| Day 5 | 广播、数值测试、第一篇专题文档 | 🔄 | [day05.md](./day05.md) |
+| Day 5 | 广播、数值测试、第一篇专题文档 | ✅ | [day05.md](./day05.md) |
 | Day 6 | Q、K、V | ✅ | [day06.md](./day06.md) |
 | Day 7 | Attention score 与 Softmax | ✅ | [day07-08.md](./day07-08.md) |
 | Day 8 | Causal Mask 与 Padding Mask | ✅ | [day07-08.md](./day07-08.md) |
@@ -204,7 +204,7 @@ hidden state 如何变成词表 logits？为什么 LLM 必须逐 token 生成？
 | Day 2 | 实现 `[B,S] → [B,S,D]`；验证相同 token ID 得到相同向量；验证梯度关闭时仍能 forward | `src/mini_transformer/embedding.py`、`tests/test_embedding.py`、[`concepts/01-embedding.md`](./concepts/01-embedding.md) |
 | Day 3 | 最小 embedding → linear → logits 模型；取 `logits[:, -1, :]` 预测下一个 token；对比 tied / untied 参数量 | `src/mini_transformer/lm_head.py`、`tiny_lm.py`、`tests/test_lm_head.py`、[`concepts/02-lm-head.md`](./concepts/02-lm-head.md) |
 | Day 4 | 实现无 KV Cache 的自回归 baseline；理解每轮为什么重复计算全部历史 token | `src/mini_transformer/generate.py`、`tests/test_generation.py` |
-| Day 5 | 文本到 token 流程图；token ID / embedding / hidden state / logits / probability 的区别；自回归伪代码；为什么第 t 个 token 依赖之前所有 token | **`docs/01-autoregressive-language-model.md`** |
+| Day 5 | 文本到 token 流程图；token ID / embedding / hidden state / logits / probability 的区别；自回归伪代码；为什么第 t 个 token 依赖之前所有 token | **`docs/deliverables/01-autoregressive-language-model.md`** |
 
 **本段验收**
 
@@ -231,7 +231,7 @@ hidden state 如何变成词表 logits？为什么 LLM 必须逐 token 生成？
 | Day 7 | 实现 `naive_attention`：`Q @ Kᵀ` → 除 `sqrt(Dh)` → 加 mask → 末维 Softmax → `probability @ V`。测试每行概率和约等于 1、与 SDPA 对齐、检查 FP32/BF16 容差 | `src/mini_transformer/attention.py` |
 | Day 8 | 画出 S=4 时的 mask。区分 causal / padding、Boolean / additive；注意 Decode 阶段 `Sq ≠ Skv` | `tests/test_mask.py` |
 | Day 9 | `[B,S,D]` 投影成 Q/K/V → reshape+transpose 到 `[B,H,S,Dh]` → 每 head 独立 Attention → 合并回 `[B,S,D]` → 输出投影 `Wo` | `src/mini_transformer/attention.py` |
-| Day 10 | 测试与文档 | `tests/test_attention.py`、`notebooks/day10_attention_shapes.ipynb`、**`docs/02-attention-and-masks.md`** |
+| Day 10 | 测试与文档 | `tests/test_attention.py`、`notebooks/day10_attention_shapes.ipynb`、**`docs/deliverables/02-attention-and-masks.md`** |
 
 **Day 9 常见 bug 清单**（写之前先看一遍）
 
@@ -273,7 +273,7 @@ x → RMSNorm → Attention → Residual Add → RMSNorm → SwiGLU MLP → Resi
 | Day 12 | `gate = SiLU(Wgate x)`；`up = Wup x`；`output = Wdown(gate × up)`。记录三次矩阵乘的 shape、参数量和理论 FLOPs | `src/mini_transformer/mlp.py` |
 | Day 13 | 手推 RoPE 公式与相对位置性质 | 手写笔记 |
 | Day 14 | 生成 cos/sin cache；对 Q/K 应用旋转；支持 position offset；与 HF Llama RoPE 对齐 | `src/mini_transformer/rope.py`、`tests/test_rope.py`、`notebooks/day14_rope_visualization.ipynb` |
-| Day 15 | Attention Pre-Norm → 第一次 Residual → MLP Pre-Norm → 第二次 Residual；dropout 在推理模式关闭 | `src/mini_transformer/block.py`、`tests/test_block.py`、**`docs/03-modern-decoder-block.md`** |
+| Day 15 | Attention Pre-Norm → 第一次 Residual → MLP Pre-Norm → 第二次 Residual；dropout 在推理模式关闭 | `src/mini_transformer/block.py`、`tests/test_block.py`、**`docs/deliverables/03-modern-decoder-block.md`** |
 
 **RoPE 要点**（Day 13～14 必须搞清）
 
@@ -283,7 +283,7 @@ x → RMSNorm → Attention → Residual Add → RMSNorm → SwiGLU MLP → Resi
 - 为什么 Decode 必须传**正确的 cache position**
 - `rotate_half` 两种布局**不能混用**
 
-**本段文档要求**：`docs/03-modern-decoder-block.md` 必须包含 Decoder Block 数据流、
+**本段文档要求**：`docs/deliverables/03-modern-decoder-block.md` 必须包含 Decoder Block 数据流、
 Pre-Norm 与 Post-Norm 区别、RMSNorm 公式、SwiGLU 公式及参数 shape、
 RoPE 的输入输出和 position 规则、一个 Block 的参数量估算。
 
@@ -362,7 +362,7 @@ token IDs → embedding → N × DecoderBlock → final RMSNorm → LM Head → 
 | Day 22 | Temperature 改变分布尖锐程度；Top-k 保留最高 k 个；Top-p 保留累计概率达阈值的最小集合；固定种子后结果可复现 | `src/mini_transformer/sampling.py` |
 | Day 23 | left/right padding 对 generation 的影响、attention_mask、position_ids、不同长度请求同 batch 的问题；**最后有效 token 位置不一定等于数组最后一列** | `tests/test_generation.py` |
 | Day 24 | 同种子同参数下对照 HF：greedy、temperature+top-k、temperature+top-p、EOS 停止、batch 中不同长度请求 | `tests/test_generation.py` |
-| Day 25 | 一轮生成的流程图；logits processor 与 sampler 的边界；greedy/top-k/top-p 适用场景；padding、mask、position 的关系 | **`docs/04-generation.md`** |
+| Day 25 | 一轮生成的流程图；logits processor 与 sampler 的边界；greedy/top-k/top-p 适用场景；padding、mask、position 的关系 | **`docs/deliverables/04-generation.md`** |
 
 ## 学习单元 Day 26～30：Prefill、Decode 与 KV Cache
 
@@ -382,7 +382,7 @@ token IDs → embedding → N × DecoderBlock → final RMSNorm → LM Head → 
 | Day 27 | 每层返回本轮新 K/V：`past [B,Hkv,S,Dh]` + `new [B,Hkv,1,Dh]` → `combined [B,Hkv,S+1,Dh]`。第一版允许 concat，**优先保证正确** | `src/mini_transformer/cache.py` |
 | Day 28 | 设计 `prefill(input_ids, attention_mask)` 和 `decode(next_token_ids, cache, cache_position)`；每层独立 Cache；Prefill 可多 token，Decode 通常单 token | `src/mini_transformer/cache.py` |
 | Day 29 | 初始化最大 batch / 最大 sequence；按 `cache_position` 原地写入；维护当前有效长度；返回有效 KV view；**禁止每轮重新分配整个缓存** | `src/mini_transformer/cache.py` |
-| Day 30 | 固定权重与输入 → 路径 A 每轮输入完整序列不用 Cache，路径 B Prefill 后每轮只输入新 token → 比较每轮最后位置 logits 和最终 greedy token 序列；覆盖 batch=1、batch>1、不同 prompt 长度 | `tests/test_cache_equivalence.py`、**`docs/05-prefill-decode-kv-cache.md`** |
+| Day 30 | 固定权重与输入 → 路径 A 每轮输入完整序列不用 Cache，路径 B Prefill 后每轮只输入新 token → 比较每轮最后位置 logits 和最终 greedy token 序列；覆盖 batch=1、batch>1、不同 prompt 长度 | `tests/test_cache_equivalence.py`、**`docs/deliverables/05-prefill-decode-kv-cache.md`** |
 
 **必须排查的错误**（这一段最容易出错，写之前贴在显示器上）
 
@@ -441,11 +441,11 @@ Text → Tokenizer → Embedding → Decoder Blocks → LM Head → Sampling →
 - [ ] Batch generation
 - [ ] Hugging Face logits parity
 - [ ] 有无 Cache 结果一致
-- [ ] CPU 与 RTX 5070 Ti
+- [ ] CPU 与 CUDA GPU
 - [ ] BF16 inference
 - [ ] Prefill / Decode benchmark
 
-**性能报告**（`docs/06-performance-report.md`）至少回答：
+**性能报告**（`docs/deliverables/07-inference-performance.md`）至少回答：
 
 1. Prefill 延迟如何随 prompt 长度变化？
 2. Decode 延迟如何随 context 长度变化？
@@ -493,32 +493,33 @@ logits             [B, S, V]
 目标结构（`*` 表示已存在）：
 
 ```text
-transformer-inference-lab/
+transformer-inference-from-scratch/
 ├── README.md                                  *
 ├── pyproject.toml                             *
 ├── src/mini_transformer/
 │   ├── config.py            Day 16
 │   ├── embedding.py         Day 2               *
-│   ├── lm_head.py           Day 3
-│   ├── tiny_lm.py           Day 3（过渡产物，Day 17 后由 model.py 取代）
+│   ├── lm_head.py           Day 3               *
+│   ├── tiny_lm.py           Day 3（过渡产物，Day 17 后由 model.py 取代）*
 │   ├── norm.py              Day 11
 │   ├── rope.py              Day 14
-│   ├── attention.py         Day 7/9/31
+│   ├── attention.py         Day 7/9/31           *
 │   ├── mlp.py               Day 12
 │   ├── block.py             Day 15
 │   ├── model.py             Day 17
 │   ├── cache.py             Day 27～29
 │   ├── sampling.py          Day 22
-│   └── generate.py          Day 4/21
+│   └── generate.py          Day 4/21             *
 ├── tests/
 │   ├── test_embedding.py            Day 2       *
-│   ├── test_lm_head.py              Day 3
-│   ├── test_attention.py            Day 10
-│   ├── test_mask.py                 Day 8
+│   ├── test_lm_head.py              Day 3       *
+│   ├── test_tiny_lm.py              Day 3       *
+│   ├── test_generation.py           Day 4/23～24*
+│   ├── test_attention.py            Day 10      *
+│   ├── test_mask.py                 Day 8       *
 │   ├── test_rope.py                 Day 14
 │   ├── test_block.py                Day 15
 │   ├── test_hf_parity.py            Day 19～20
-│   ├── test_generation.py           Day 4/23～24
 │   └── test_cache_equivalence.py    Day 30
 ├── benchmarks/
 │   ├── bench_attention.py           Day 35
@@ -527,23 +528,29 @@ transformer-inference-lab/
 │   └── bench_cache_memory.py        Day 32
 ├── notebooks/                       文件名前缀 = 创建它的学习单元
 │   ├── day01_tokenizer_playground.ipynb   Day 1      *
-│   ├── day03_logits_and_softmax.ipynb     Day 3
-│   ├── day04_autoregressive_waste.ipynb   Day 4
-│   ├── day10_attention_shapes.ipynb       Day 10
-│   ├── day14_rope_visualization.ipynb     Day 14
-│   ├── day20_tiny_training.ipynb          Day 20（选做）
-│   └── day26_cache_growth.ipynb           Day 26/29/35
+│   ├── day03_logits_and_softmax.ipynb     Day 3      *
+│   ├── day04_autoregressive_waste.ipynb   Day 4      *
+│   ├── day08_attention_masks.ipynb        Day 8      *
+│   ├── day09_multi_head_attention.ipynb   Day 9      *
+│   ├── day10_attention_shapes.ipynb       Day 10     *
+│   ├── day14_rope_visualization.ipynb     Day 14     *
+│   ├── day20_tiny_training.ipynb          Day 20（选做）*
+│   └── day26_cache_growth.ipynb           Day 26/29/35*
 └── docs/
+    ├── README.md                               *  学习导航
     ├── roadmap.md                              *  本文
     ├── dayXX-YY.md                             *  每日任务
     ├── concepts/                               *  细粒度工作笔记
     ├── 00-tensor-conventions.md    Day 1～2     *
-    ├── 01-autoregressive-language-model.md  Day 5
-    ├── 02-attention-and-masks.md            Day 10
-    ├── 03-modern-decoder-block.md           Day 15
-    ├── 04-generation.md                     Day 25
-    ├── 05-prefill-decode-kv-cache.md        Day 30
-    └── 06-performance-report.md             Day 40
+    └── deliverables/
+        ├── 01-autoregressive-language-model.md  Day 5
+        ├── 02-attention-and-masks.md            Day 10
+        ├── 03-modern-decoder-block.md           Day 15
+        ├── 04-generation.md                     Day 25
+        ├── 05-prefill-decode-kv-cache.md        Day 30
+        ├── 06-gqa-and-kv-cache-memory.md        Day 40
+        ├── 07-inference-performance.md          Day 40
+        └── 08-next-steps.md                     Day 40
 ```
 
 **三类文档的分工**
@@ -553,7 +560,7 @@ transformer-inference-lab/
 | 总纲 | `docs/roadmap.md` | 本文。全局计划、资料、进度 |
 | 每日任务 | `docs/dayXX-YY.md` | 当天做什么、过关标准 |
 | 细粒度笔记 | `docs/concepts/` | 边学边记，一个知识点一篇 |
-| 专题交付物 | `docs/NN-*.md` | 每周门禁产出，综合当周 concepts |
+| 专题交付物 | `docs/deliverables/` | 每周门禁产出，综合当周 concepts |
 
 > **不要同时创建多个玩具仓库。** 所有阶段都在同一个项目上递增，
 > 方便看到「数学公式 → 正确实现 → 推理优化」的演进过程。

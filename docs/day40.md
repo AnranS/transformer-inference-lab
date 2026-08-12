@@ -15,11 +15,11 @@
 | 进度 | 任务 | 落点 |
 | --- | --- | --- |
 | ⬜ | 任务 1：全量测试与代码审查 | 全仓库 |
-| ⬜ | 任务 2：写第六篇专题文档 | **`docs/06-gqa-and-kv-cache-memory.md`** |
-| ⬜ | 任务 3：写第七篇专题文档（性能报告） | **`docs/07-inference-performance.md`** |
+| ⬜ | 任务 2：写第六篇专题文档 | **`docs/deliverables/06-gqa-and-kv-cache-memory.md`** |
+| ⬜ | 任务 3：写第七篇专题文档（性能报告） | **`docs/deliverables/07-inference-performance.md`** |
 | ⬜ | 任务 4：重写 README 为可复现入口 | `README.md` |
 | ⬜ | 任务 5：毕业验收自查 | 本文末 |
-| ⬜ | 任务 6：下一阶段瓶颈清单 | `docs/08-next-steps.md` |
+| ⬜ | 任务 6：下一阶段瓶颈清单 | `docs/deliverables/08-next-steps.md` |
 
 ## 学习资料
 
@@ -83,7 +83,7 @@ def test_end_to_end_smoke():
 
 ## 任务 2：写第六篇专题文档（60 分钟）
 
-**`docs/06-gqa-and-kv-cache-memory.md`**。综合 Day 31～32 和 Day 36：
+**`docs/deliverables/06-gqa-and-kv-cache-memory.md`**。综合 Day 31～32 和 Day 36：
 
 1. **MHA / GQA / MQA 的关系**和 `num_key_value_groups`
 2. **GQA 省显存不省参数**，含量化对比
@@ -98,7 +98,7 @@ def test_end_to_end_smoke():
 
 ## 任务 3：写第七篇专题文档（120 分钟）
 
-**`docs/07-inference-performance.md`**——最终性能报告，本项目的门面。
+**`docs/deliverables/07-inference-performance.md`**——最终性能报告，本项目的门面。
 
 ### 结构建议
 
@@ -208,7 +208,7 @@ roadmap 里那份清单，逐条口述作答。
 
 ## 任务 6：下一阶段瓶颈清单（60 分钟）
 
-**`docs/08-next-steps.md`**。这是本项目的最后一份产出，也是承接下一阶段的桥梁。
+**`docs/deliverables/08-next-steps.md`**。这是本项目的最后一份产出，也是承接下一阶段的桥梁。
 
 ### 从数据出发，不是从流行词出发
 
@@ -266,13 +266,13 @@ roadmap 有一节「当前不要学的内容」。四周结束后，
 - [ ] 代码审查清单全部确认
 - [ ] HF 对应表的缺口已全部关闭
 - [ ] 端到端冒烟测试存在且通过
-- [ ] `docs/06-gqa-and-kv-cache-memory.md` 完成
-- [ ] `docs/07-inference-performance.md` 完成，含摘要、六项数据、已知限制
+- [ ] `docs/deliverables/06-gqa-and-kv-cache-memory.md` 完成
+- [ ] `docs/deliverables/07-inference-performance.md` 完成，含摘要、六项数据、已知限制
 - [ ] **第 6 节「Prefill vs Decode」对比表能独立填出**
 - [ ] README 在删掉 `.venv` 重装后能走通全流程
 - [ ] 三条毕业标准全部达成
 - [ ] 九条能力目标闭卷自答通过，**含手写五个算子**
-- [ ] `docs/08-next-steps.md` 完成，每条瓶颈都指向自己的实验数据
+- [ ] `docs/deliverables/08-next-steps.md` 完成，每条瓶颈都指向自己的实验数据
 - [ ] 写了项目回顾
 
 ---

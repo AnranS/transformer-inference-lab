@@ -15,7 +15,7 @@
 | ⬜ | 任务 1：逐步 logits 等价性 | `tests/test_cache_equivalence.py` |
 | ⬜ | 任务 2：token 序列等价性 + 多配置扫描 | 同上 |
 | ⬜ | 任务 3：六个必查错误逐个排查 | 本文清单 |
-| ⬜ | 任务 4：写第五篇专题文档 | **`docs/05-prefill-decode-kv-cache.md`** |
+| ⬜ | 任务 4：写第五篇专题文档 | **`docs/deliverables/05-prefill-decode-kv-cache.md`** |
 | ⬜ | 任务 5：第 3 周门禁与段落验收 | 本文末 |
 
 ## 学习资料
@@ -181,7 +181,7 @@ Day 27 加的断言应该**直接抛异常**，而不是让测试静默失败。
 
 ### 记录到文档
 
-把这六条整理成一张表进 `docs/05-prefill-decode-kv-cache.md`：
+把这六条整理成一张表进 `docs/deliverables/05-prefill-decode-kv-cache.md`：
 
 | 错误 | 症状 | 检测方法 | 我的防线 |
 |---|---|---|---|
@@ -192,7 +192,7 @@ Day 27 加的断言应该**直接抛异常**，而不是让测试静默失败。
 
 ## 任务 4：写第五篇专题文档（80 分钟）
 
-**`docs/05-prefill-decode-kv-cache.md`**。建议结构：
+**`docs/deliverables/05-prefill-decode-kv-cache.md`**。建议结构：
 
 1. **Prefill / Decode 的六项对比表**（Day 26）
 2. **KV Cache 缓存什么、为什么能缓存、为什么 Q 不缓存**（Day 26）
@@ -250,7 +250,7 @@ Day 27 加的断言应该**直接抛异常**，而不是让测试静默失败。
 - [ ] 能解释为什么容差不能设 `0`（浮点运算顺序不同）
 - [ ] 能通过误差量级区分「浮点噪声」和「真 bug」
 - [ ] 六个必查错误的排查表完成
-- [ ] `docs/05-prefill-decode-kv-cache.md` 八节完成，含实测数据
+- [ ] `docs/deliverables/05-prefill-decode-kv-cache.md` 八节完成，含实测数据
 - [ ] 第 3 周段落验收五条全部能答，尤其最后一条
 - [ ] 门禁全部通过
 

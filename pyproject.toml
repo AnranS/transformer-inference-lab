@@ -1,17 +1,27 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "mini-transformer"
+name = "transformer-inference-from-scratch"
 version = "0.1.0"
-description = "Transformer inference lab: build from tokenizer to GPT-2"
+description = "Build a Llama-style Decoder-only Transformer inference engine from tokenizer to KV Cache"
+readme = "README.md"
 requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    { name = "AnranS" },
+]
 dependencies = [
     "torch>=2.2",
     "transformers>=4.40",
     "tokenizers>=0.19",
 ]
+
+[project.urls]
+Repository = "https://github.com/AnranS/transformer-inference-from-scratch"
+Documentation = "https://github.com/AnranS/transformer-inference-from-scratch/tree/master/docs"
 
 # uv sync 默认安装 dev 组，不用额外加参数。
 # 注意：uv sync 会卸载所有未在此声明的包，手动装的工具要写进来才不会被清掉。

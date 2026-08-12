@@ -18,7 +18,7 @@
 | ⬜ | 任务 2：建立源码到自研实现的对应表 | `docs/concepts/07-hf-llama-attention.md` |
 | ⬜ | 任务 3：补齐测试 | `tests/test_attention.py`、`tests/test_mask.py` |
 | ⬜ | 任务 4：Attention shape notebook | `notebooks/day10_attention_shapes.ipynb` |
-| ⬜ | 任务 5：写第二篇专题文档 | **`docs/02-attention-and-masks.md`** |
+| ⬜ | 任务 5：写第二篇专题文档 | **`docs/deliverables/02-attention-and-masks.md`** |
 | ⬜ | 任务 6：门禁自查 | 本文末 |
 
 ## 学习资料
@@ -121,7 +121,7 @@ def test_week1_gate_naive_attention_matches_sdpa():
 
 ## 任务 5：写第二篇专题文档（75 分钟）
 
-**`docs/02-attention-and-masks.md`**，第 1 周的正式交付物。必须包含：
+**`docs/deliverables/02-attention-and-masks.md`**，第 1 周的正式交付物。必须包含：
 
 1. **Attention 公式**与每一步的形状
 2. **Q/K/V 的语义**（来自 Day 6）
@@ -165,7 +165,7 @@ def test_week1_gate_naive_attention_matches_sdpa():
 - [ ] 完成 HF ↔ 自研实现对应表，缺口列清晰
 - [ ] `tests/test_attention.py` 与 `tests/test_mask.py` 整理完成，含 `Sq != Skv` 用例
 - [ ] `notebooks/day10_attention_shapes.ipynb` 四节完成
-- [ ] `docs/02-attention-and-masks.md` 九个部分完成，含具体误差数字
+- [ ] `docs/deliverables/02-attention-and-masks.md` 九个部分完成，含具体误差数字
 - [ ] 门禁七条全部通过
 
 ---

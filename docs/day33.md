@@ -109,7 +109,7 @@ benchmark(fn, *, warmup=5, repeats=20, device) -> BenchResult
 
 ### 关于 CPU 上跑 benchmark
 
-前 4 周 CPU 即可，之后用 RTX 5070 Ti。如果你现在在 CPU 上：
+前 4 周 CPU 即可，之后建议使用支持 BF16 的 CUDA GPU。如果你现在在 CPU 上：
 
 - **同步相关的代码依然要写**（为将来准备），只是运行时跳过
 - CPU 上的数据仍然有意义：**相对**趋势（batch 翻倍时间怎么变）是可比的

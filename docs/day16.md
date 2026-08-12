@@ -9,7 +9,7 @@
 
 > **所有模块只从 config 读取尺寸，禁止散落魔法数字。**
 
-> 如果学习日 10 的 `docs/03-modern-decoder-block.md` 没写完，今天先补——
+> 如果学习日 10 的 `docs/deliverables/03-modern-decoder-block.md` 没写完，今天先补——
 > 今天只有 3 小时任务，有空间。
 
 ## 进度与落点

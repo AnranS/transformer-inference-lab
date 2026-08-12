@@ -14,8 +14,8 @@
 | ✅ | 任务 1：学习广播规则 | [`00-tensor-conventions.md`](./00-tensor-conventions.md) |
 | ✅ | 任务 2：广播陷阱实验 | [`../notebooks/day03_logits_and_softmax.ipynb`](../notebooks/day03_logits_and_softmax.ipynb)「7. 广播陷阱」 |
 | ✅ | 任务 3：数值容差与 `assert_close` | [`concepts/05-numerical-tolerance.md`](./concepts/05-numerical-tolerance.md) |
-| ✅ | 任务 4：写第一篇专题文档 | [`01-autoregressive-language-model.md`](./01-autoregressive-language-model.md) |
-| 🔄 | 任务 5：第一段验收自查 | 本文末；由你 review 后确认 |
+| ✅ | 任务 4：写第一篇专题文档 | [`deliverables/01-autoregressive-language-model.md`](./deliverables/01-autoregressive-language-model.md) |
+| ✅ | 任务 5：第一段验收自查 | 本文末；已完成 review |
 
 ## 学习资料
 
@@ -109,7 +109,7 @@ PyTorch 按 dtype 给的默认容差（这几个数记住，第 4 周对齐 HF �
 
 ## 任务 4：写第一篇专题文档（55 分钟）
 
-这是路线里第一个正式交付物：**`docs/01-autoregressive-language-model.md`**。
+这是路线里第一个正式交付物：**`docs/deliverables/01-autoregressive-language-model.md`**。
 
 和 `concepts/` 下的笔记不同——那些是边学边记的碎片，这篇要**综合成一条完整叙事**，
 写给「一个月后忘光了的自己」看。四个必需部分：
@@ -150,10 +150,10 @@ hidden state 和 embedding 的关系也要说清：embedding 是**第 0 层**的
 
 这一段（学习单元 Day 1～5）的验收标准，逐条自问，不看资料：
 
-- [ ] 能从文本一路讲到 next token
-- [ ] 能写出 embedding 和 LM Head 的 shape
-- [ ] 能解释 logits 为什么不需要先 Softmax 再 argmax
-- [ ] 完成 `tests/test_embedding.py`
+- [x] 能从文本一路讲到 next token
+- [x] 能写出 embedding 和 LM Head 的 shape
+- [x] 能解释 logits 为什么不需要先 Softmax 再 argmax
+- [x] 完成 `tests/test_embedding.py`
 
 答不上来的条目，回对应单元补。**别带着漏洞进第 2 周**——Attention 会立刻放大所有 shape 上的糊涂。
 
@@ -161,12 +161,12 @@ hidden state 和 embedding 的关系也要说清：embedding 是**第 0 层**的
 
 ## 过关标准
 
-- [ ] 能不看资料说出广播的两条规则
-- [ ] 亲手复现了三个广播陷阱，并能解释为什么不报错
-- [ ] 记住 fp32 和 bf16 的默认容差量级差异，以及「对齐只在 fp32 做」这条规则
-- [ ] 完成 `docs/01-autoregressive-language-model.md` 四个部分
-- [ ] `pytest -q` 全部通过
-- [ ] 第一段四条验收全部能答
+- [x] 能不看资料说出广播的两条规则
+- [x] 亲手复现了三个广播陷阱，并能解释为什么不报错
+- [x] 记住 fp32 和 bf16 的默认容差量级差异，以及「对齐只在 fp32 做」这条规则
+- [x] 完成 `docs/deliverables/01-autoregressive-language-model.md` 四个部分
+- [x] `pytest -q` 全部通过
+- [x] 第一段四条验收全部能答
 
 ---
 
