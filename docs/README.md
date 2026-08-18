@@ -9,8 +9,8 @@
 
 ## 当前进度
 
-- 已完成：Day 1～9
-- 下一单元：[Day 10：HF LlamaAttention 源码与数值对齐](./day10.md)
+- 已完成：Day 1～10
+- 下一单元：[Day 11～12：RMSNorm 与 SwiGLU](./day11-12.md)
 - 总计划：[roadmap.md](./roadmap.md)
 - 全局 shape 约定：[00-tensor-conventions.md](./00-tensor-conventions.md)
 

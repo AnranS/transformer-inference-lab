@@ -5,10 +5,11 @@
 ## 已完成
 
 1. [自回归语言模型：从文本到下一个 token](./01-autoregressive-language-model.md)（Day 5）
+2. [Attention 与 Mask](./02-attention-and-masks.md)（Day 10）
 
 ## Planned
 
-2. `02-attention-and-masks.md`（Day 10）
+3. `03-modern-decoder-block.md`（Day 15）
 3. `03-modern-decoder-block.md`（Day 15）
 4. `04-generation.md`（Day 25）
 5. `05-prefill-decode-kv-cache.md`（Day 30）

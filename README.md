@@ -23,19 +23,19 @@
 
 ## 当前进度
 
-**9 / 40 学习单元完成。** 下一步：[docs/day10.md](docs/day10.md)（Attention 模块封装与首周门禁）。
-当前测试基线：**70 个 pytest case**，覆盖 Embedding、LM Head、TinyLM、生成循环、Mask 和 Attention。
+**10 / 40 学习单元完成。** 下一步：[docs/day11-12.md](docs/day11-12.md)（RMSNorm 与 SwiGLU）。
+当前测试基线：**96 个 pytest case**，覆盖 Embedding、LM Head、TinyLM、生成循环、Mask 和 Attention。
 
 ```text
 hidden_states [B,S,D]
   → Q/K/V 投影 → split heads [B,H,S,Dh]
   → scaled dot-product attention + mask
   → merge heads [B,S,D] → Wo
-  └──────────────── Day 6～9 已完成 ────────────────┘
+  └──────────────── Day 6～10 已完成（第 1 周门禁已过） ────────────────┘
 ```
 
-当前已经具备多头 Attention 与 causal/padding mask，但还没有完整 Decoder Block 和位置编码；
-RoPE 将在 Day 14 接入。
+当前已经具备多头 Attention、causal / padding mask，以及与 HF `LlamaAttention` 的对照表。
+还没有完整 Decoder Block 和位置编码；下一步是 RMSNorm 与 SwiGLU，RoPE 在 Day 14 接入。
 
 ## 文档怎么找
 
@@ -76,13 +76,15 @@ docs/
   deliverables/
     README.md                    # 阶段交付物索引
     01-autoregressive-language-model.md # Day 5 已完成
+    02-attention-and-masks.md           # Day 10 已完成
 notebooks/
   day01_tokenizer_playground.ipynb  # 已写，Day 1 的动手实验
   day03_logits_and_softmax.ipynb    # 已写，含只算最后一位的耗时对比
   day04_autoregressive_waste.ipynb  # 已写，无 Cache 重算实验
   day08_attention_masks.ipynb       # 已写，Mask 可视化
   day09_multi_head_attention.ipynb  # 已写，多头实现与数值验证
-  day10_*.ipynb … day26_*.ipynb     # Planned，按学习单元逐步完成
+  day10_attention_shapes.ipynb      # 已写，形状流水线与 mask 可视化
+  day14_*.ipynb … day26_*.ipynb     # Planned，按学习单元逐步完成
 src/mini_transformer/
   embedding.py                   # Day 2，TokenEmbedding
   lm_head.py                     # Day 3，LMHead
@@ -94,8 +96,8 @@ tests/
   test_lm_head.py                # Day 3，20 例
   test_tiny_lm.py                # Day 3，6 例
   test_generation.py             # Day 4，4 例
-  test_mask.py                   # Day 8，8 例
-  test_attention.py              # Day 7～9，19 例
+  test_mask.py                   # Day 8～10，12 例
+  test_attention.py              # Day 7～10，41 例
 ```
 
 后续会出现的 `rope.py`、`cache.py`、`benchmarks/` 等文件，

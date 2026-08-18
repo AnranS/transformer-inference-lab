@@ -11,6 +11,7 @@
 | Day 5 | 广播与数值容差 | [05-numerical-tolerance.md](./05-numerical-tolerance.md) | [day05.md](../day05.md) |
 | Day 6～7 | Q/K/V 与 Scaled Dot-Product Attention | [04-attention-qkv.md](./04-attention-qkv.md) | [day06.md](../day06.md)、[day07-08.md](../day07-08.md) |
 | Day 8 | Causal 与 Padding Mask | [06-masks.md](./06-masks.md) | [day07-08.md](../day07-08.md) |
+| Day 10 | HF LlamaAttention 对照 | [07-hf-llama-attention.md](./07-hf-llama-attention.md) | [day10.md](../day10.md) |
 
 Day 9 的多头实现与验证见：
 

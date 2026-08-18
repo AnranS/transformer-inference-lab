@@ -14,12 +14,12 @@
 
 | 进度 | 任务 | 落点 |
 | --- | --- | --- |
-| ⬜ | 任务 1：读 HF `LlamaAttention` 源码 | 阅读笔记 |
-| ⬜ | 任务 2：建立源码到自研实现的对应表 | `docs/concepts/07-hf-llama-attention.md` |
-| ⬜ | 任务 3：补齐测试 | `tests/test_attention.py`、`tests/test_mask.py` |
-| ⬜ | 任务 4：Attention shape notebook | `notebooks/day10_attention_shapes.ipynb` |
-| ⬜ | 任务 5：写第二篇专题文档 | **`docs/deliverables/02-attention-and-masks.md`** |
-| ⬜ | 任务 6：门禁自查 | 本文末 |
+| ✅ | 任务 1：读 HF `LlamaAttention` 源码 | 阅读笔记 |
+| ✅ | 任务 2：建立源码到自研实现的对应表 | `docs/concepts/07-hf-llama-attention.md` |
+| ✅ | 任务 3：补齐测试 | `tests/test_attention.py`、`tests/test_mask.py` |
+| ✅ | 任务 4：Attention shape notebook | `notebooks/day10_attention_shapes.ipynb` |
+| ✅ | 任务 5：写第二篇专题文档 | **`docs/deliverables/02-attention-and-masks.md`** |
+| ✅ | 任务 6：门禁自查 | 本文末 |
 
 ## 学习资料
 
@@ -139,21 +139,21 @@ def test_week1_gate_naive_attention_matches_sdpa():
 
 逐条确认，不能跳：
 
-- [ ] `naive_attention` 与 `F.scaled_dot_product_attention` 在 **fp32** 下 `assert_close` 通过
-- [ ] `MultiHeadAttention`（`Hq > 1`）与 SDPA 对齐
-- [ ] causal mask 测试全部通过，含 `Sq == Skv` 和 `Sq=1, Skv>1` 两种形态
-- [ ] padding mask 测试全部通过
-- [ ] causal + padding 合成后能广播到 `[B, Hq, Sq, Skv]`
-- [ ] 因果 attention 第 0 行概率为 `[1, 0, 0, ...]`
-- [ ] `pytest -q` 全部通过
+- [x] `naive_attention` 与 `F.scaled_dot_product_attention` 在 **fp32** 下 `assert_close` 通过
+- [x] `MultiHeadAttention`（`Hq > 1`）与 SDPA 对齐
+- [x] causal mask 测试全部通过，含 `Sq == Skv` 和 `Sq=1, Skv>1` 两种形态
+- [x] padding mask 测试全部通过
+- [x] causal + padding 合成后能广播到 `[B, Hq, Sq, Skv]`
+- [x] 因果 attention 第 0 行概率为 `[1, 0, 0, ...]`
+- [x] `pytest -q` 全部通过
 
 ### 第 1 周段落验收
 
-- [ ] 不看资料写出 Attention 公式
-- [ ] 从 `[B,S,D]` 推导到 `[B,Hq,S,Dh]` 再还原
-- [ ] 解释为什么 attention score 是 `S × S`
-- [ ] naive 实现与 SDPA 数值对齐
-- [ ] 能分别处理 causal mask 和 padding mask
+- [x] 不看资料写出 Attention 公式
+- [x] 从 `[B,S,D]` 推导到 `[B,Hq,S,Dh]` 再还原
+- [x] 解释为什么 attention score 是 `S × S`
+- [x] naive 实现与 SDPA 数值对齐
+- [x] 能分别处理 causal mask 和 padding mask
 
 > **任何一条没过，不要开始第 2 周。** 宁可多花一天。
 
@@ -161,12 +161,12 @@ def test_week1_gate_naive_attention_matches_sdpa():
 
 ## 过关标准
 
-- [ ] 在 HF 源码里定位到了表格中的全部条目并记下行号
-- [ ] 完成 HF ↔ 自研实现对应表，缺口列清晰
-- [ ] `tests/test_attention.py` 与 `tests/test_mask.py` 整理完成，含 `Sq != Skv` 用例
-- [ ] `notebooks/day10_attention_shapes.ipynb` 四节完成
-- [ ] `docs/deliverables/02-attention-and-masks.md` 九个部分完成，含具体误差数字
-- [ ] 门禁七条全部通过
+- [x] 在 HF 源码里定位到了表格中的全部条目并记下行号
+- [x] 完成 HF ↔ 自研实现对应表，缺口列清晰
+- [x] `tests/test_attention.py` 与 `tests/test_mask.py` 整理完成，含 `Sq != Skv` 用例
+- [x] `notebooks/day10_attention_shapes.ipynb` 四节完成
+- [x] `docs/deliverables/02-attention-and-masks.md` 九个部分完成，含具体误差数字
+- [x] 门禁七条全部通过
 
 ---
 
